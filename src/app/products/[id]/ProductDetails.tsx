@@ -12,6 +12,7 @@ import {
   Package,
   Info,
   FileText,
+  Check,
 } from "lucide-react";
 
 // Define the Product type based on your data structure
@@ -245,7 +246,18 @@ export function ProductDetails({
                   Detailed Specifications
                 </h2>
               </div>
-              <p className="text-gray-700 leading-relaxed">{product.details}</p>
+
+              {/* Check if details exist and display them as a list */}
+              <ul className="space-y-3">
+                {/* Map over the array to display each item */}
+                {product.details.map((detail, index) => (
+                  <li key={index} className="flex items-start">
+                    {/* Use a Check icon for a clean, professional bullet point */}
+                    <Check className="h-5 w-5 text-green-600 mt-1 mr-2 flex-shrink-0" />
+                    <p className="text-gray-700 leading-relaxed">{detail}</p>
+                  </li>
+                ))}
+              </ul>
             </motion.div>
 
             <motion.div

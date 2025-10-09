@@ -3,7 +3,10 @@ import { Sprout, Phone, Mail, MapPin } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-green-900 text-white">
+    <footer
+      className="bg-green-900 text-white bg-size-[30%] bg-no-repeat bg-bottom-right p-8 rounded-lg"
+      style={{ backgroundImage: "url('/background/footer.png')" }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
@@ -78,7 +81,10 @@ export function Footer() {
               </li>
               <li className="flex items-start space-x-2 text-green-100">
                 <MapPin className="h-16 w-16 -mt-5" />
-                <span>અમર ફાર્મ, નવાગામ ડાંભર પાટિયા, ઇટાળવાથી નવસારી–ગણદેવી રોડ, સ્વામિનારાયણ ગૌશાળા પાસે, ડાંભર, નવસારી– 395472.</span>
+                <span>
+                  અમર ફાર્મ, નવાગામ ડાંભર પાટિયા, ઇટાળવાથી નવસારી–ગણદેવી રોડ,
+                  સ્વામિનારાયણ ગૌશાળા પાસે, ડાંભર, નવસારી– 395472.
+                </span>
               </li>
             </ul>
           </div>

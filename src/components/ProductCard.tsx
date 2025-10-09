@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Product } from '@/src/lib/types';
+import { Product } from '@/lib/types';
 import { ArrowRight } from 'lucide-react';
 
 interface ProductCardProps {
@@ -9,13 +9,13 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <div className="relative h-48 bg-gray-100">
+    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-shadow duration-300 border border-green-900">
+      <div className="relative h-96 bg-gray-100 ">
         <Image
           src={product.image}
           alt={product.name}
           fill
-          className="object-cover"
+          className="object-contain"
         />
         <div className="absolute top-2 right-2">
           <span className="bg-green-700 text-white text-xs px-2 py-1 rounded-full">

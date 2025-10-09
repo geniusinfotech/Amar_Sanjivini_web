@@ -315,7 +315,10 @@ export default function Home() {
       </section>
 
       {/* About us */}
-      <section className="py-16 bg-green-50">
+      <section
+        className="py-16 bg-green-100 bg-contain bg-center p-8 rounded-lg"
+        style={{ backgroundImage: "url('/background/aboutus.png')" }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="grid md:grid-cols-2 gap-12 items-center"
@@ -325,7 +328,7 @@ export default function Home() {
             variants={containerVariants}
           >
             <motion.div
-              className="relative h-96 rounded-lg overflow-hidden shadow-xl bg-green-00"
+              className="relative h-96 rounded-lg overflow-hidden shadow-xl bg-green-600"
               variants={itemVariants}
             >
               <Image
