@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
-import { WhatsAppButton } from "../components/WhatsAppButton";
+// import { WhatsAppButton } from "../components/WhatsAppButton";
+import { AuthProvider } from "@/context/AuthContext";
+import { AnimationProvider } from "@/providers/animation-provider";
 
 const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
@@ -25,10 +27,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-        <WhatsAppButton />
+        <AuthProvider>
+          <AnimationProvider>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+            {/* <WhatsAppButton /> */}
+          </AnimationProvider>
+        </AuthProvider>
       </body>
     </html>
   );

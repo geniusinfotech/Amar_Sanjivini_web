@@ -1,12 +1,14 @@
-'use client';
+"use client";
 
-import { MessageCircle } from 'lucide-react';
-import { WHATSAPP_NUMBER } from '@/lib/types';
+import { MessageCircle } from "lucide-react";
+import { WHATSAPP_NUMBER } from "@/lib/types";
 
 export function WhatsAppButton() {
   const handleClick = () => {
-    const message = encodeURIComponent('Hi, I would like to know more about your products.');
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+    const message = encodeURIComponent(
+      "Hi, I would like to know more about your products."
+    );
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank");
   };
 
   return (

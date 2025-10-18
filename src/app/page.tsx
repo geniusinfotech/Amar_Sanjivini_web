@@ -3,10 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ProductCard } from "@/components/ProductCard";
 import { getFeaturedProducts } from "@/lib/products";
 import { ArrowRight, Leaf, Shield, Truck, Award } from "lucide-react";
 import { useState, useEffect } from "react";
+import FeaturedProducts from "@/components/sections/FeauredProducts";
 
 // --- Slider Data - CUSTOMIZE YOUR CONTENT HERE ---
 const slides = [
@@ -264,55 +264,7 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            className="text-center mb-12"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={fadeInFromBottom}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Featured Products
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Explore our best-selling fertilizers and pesticides trusted by
-              farmers for superior crop health and yield
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-            variants={containerVariants}
-          >
-            {featuredProducts.map((product, index) => (
-              <motion.div key={product.id} variants={itemVariants}>
-                <ProductCard product={product} />
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <motion.div
-            className="text-center mt-12"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.5 }}
-            variants={fadeInFromBottom}
-          >
-            <Link
-              href="/products"
-              className="inline-flex items-center bg-green-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-800 transition-colors"
-            >
-              View All Products
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+      <FeaturedProducts />
 
       {/* About us */}
       <section
@@ -328,14 +280,14 @@ export default function Home() {
             variants={containerVariants}
           >
             <motion.div
-              className="relative h-96 rounded-lg overflow-hidden shadow-xl bg-green-600"
+              className="relative h-96 rounded-lg overflow-hidden shadow-xl bg-white"
               variants={itemVariants}
             >
               <Image
                 src="/Logo/logo.png"
                 alt="About Amar Sanjivani"
                 fill
-                className="object-cover"
+                className="object-contain"
               />
             </motion.div>
 

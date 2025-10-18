@@ -1,47 +1,76 @@
-// NO 'use client' directive here!
+// NO 'use client' directive here - This is a Server Component!
 
 import { notFound } from "next/navigation";
-import { getProductById, products } from "@/lib/products";
-import { getWhatsAppLink } from "@/lib/types";
-// import { ProductCard } from "@/components/ProductCard"; // Still needed if ProductDetails uses it
-import { ProductDetails } from "./ProductDetails"; // Import the new Client Component
+import { ProductDetails } from "./ProductDetails"; // Import the Client Component
 
-interface ProductPageProps {
-  params: {
-    id: string;
-  };
-}
+// Use dynamic rendering since we're fetching from an API
+export const dynamic = "force-dynamic";
 
-// 1. generateStaticParams and dynamic MUST stay in the Server Component file
-export function generateStaticParams() {
-  return products.map((product) => ({
-    id: product.id,
-  }));
-}
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  // ✅ Await params before using
+  const { id: productId } = await params;
 
-export const dynamic = "force-static";
-
-// 2. This remains an async Server Component to fetch the data
-export default async function ProductPage({ params }: ProductPageProps) {
-  const product = getProductById(params.id);
-
-  if (!product) {
+  // Basic server-side validation
+  if (!productId || productId.trim() === "") {
     notFound();
   }
 
-  // Data preparation (also happens on the server)
-  const relatedProducts = products
-    .filter((p) => p.category === product.category && p.id !== product.id)
-    .slice(0, 3);
-
-  const whatsappLink = getWhatsAppLink(product.name);
-
-  // 3. Render the Client Component and pass the fetched data as props
+  // Pass the productId to the Client Component
   return (
     <ProductDetails
-      product={product}
-      relatedProducts={relatedProducts}
-      whatsappLink={whatsappLink}
+      productId={productId}
+      apiBaseUrl={process.env.NEXT_PUBLIC_API_BASE}
+      imageBaseUrl={process.env.NEXT_PUBLIC_IMAGE_URL}
+      whatsappNumber={process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}
     />
   );
+}
+
+// ✅ Updated generateMetadata (same async pattern)
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE}/products/${id}`,
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) {
+      return {
+        title: "Product Not Found",
+      };
+    }
+
+    const product = await response.json();
+
+    return {
+      title: `${product.name} - Amar Sanjivini`,
+      description: product.description,
+      openGraph: {
+        title: product.name,
+        description: product.description,
+        images: [
+          {
+            url: product.image.startsWith("http")
+              ? product.image
+              : `${process.env.NEXT_PUBLIC_IMAGE_URL}/${product.image}`,
+          },
+        ],
+      },
+    };
+  } catch (error) {
+    console.error("Error generating metadata:", error);
+    return {
+      title: "Product",
+    };
+  }
 }

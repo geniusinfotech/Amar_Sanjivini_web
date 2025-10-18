@@ -21,13 +21,13 @@ export function Navbar() {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2">
             {/* <Sprout className="h-8 w-8 text-green-700" /> */}
-            <div className="h-20 w-20 overflow-hidden">
+            <div className="h-16 w-16 overflow-hidden">
               <Image
                 src="/Logo/logo.png"
                 alt="logo"
                 width={200}
                 height={200}
-                className="object-cover"
+                className="object-contain"
               />
             </div>
             <span className="text-xl font-bold text-green-800">

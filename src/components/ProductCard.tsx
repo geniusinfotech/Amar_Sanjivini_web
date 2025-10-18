@@ -15,6 +15,9 @@ export function ProductCard({ product }: ProductCardProps) {
           src={product.image}
           alt={product.name}
           fill
+          quality={100}
+          priority
+          unoptimized
           className="object-contain"
         />
         <div className="absolute top-2 right-2">

@@ -1,9 +1,8 @@
-"use client"; // This must be at the top of the new file
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-// Import motion from 'framer-motion'
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ProductCard } from "@/components/ProductCard";
 import {
@@ -13,56 +12,128 @@ import {
   Info,
   FileText,
   Check,
+  Loader2,
 } from "lucide-react";
+import axios from "axios";
 
-// Define the Product type based on your data structure
 interface Product {
-  id: string;
+  _id: string;
   name: string;
   description: string;
-  price: string;
+  price: number;
+  categoryName: string;
+  categoryId: string;
   image: string;
-  category: string;
-  details: string;
-  usageInstructions: string;
+  isNewProduct: boolean;
+  special?: string;
+  Specifications?: string;
+  Uses?: string[];
+  Benefits?: string[];
+  quantity?: string;
 }
 
 interface ProductDetailsProps {
-  product: Product;
-  relatedProducts: Product[];
-  whatsappLink: string;
+  productId: string;
+  apiBaseUrl?: string;
+  imageBaseUrl?: string;
+  whatsappNumber?: string;
 }
 
-// Define the animation variants for the main image container
 const imageContainerVariants = {
-  // Initial state, slightly scaled down and less opaque
   hidden: { opacity: 0, scale: 0.95, y: 20 },
-  // Animated state, scaled up, full opacity, and reset y position
   visible: {
     opacity: 1,
     scale: 1,
     y: 0,
     transition: {
-      type: "spring", // Use a spring physics animation
-      stiffness: 100, // Control the stiffness/bounciness
+      type: "spring",
+      stiffness: 100,
       damping: 10,
-      delay: 0.1, // Add a small delay after load
+      delay: 0.1,
     },
   },
 };
 
 export function ProductDetails({
-  product,
-  relatedProducts,
-  whatsappLink,
+  productId,
+  apiBaseUrl = process.env.NEXT_PUBLIC_API_URL,
+  imageBaseUrl = process.env.NEXT_PUBLIC_IMAGE_URL,
+  whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER,
 }: ProductDetailsProps) {
-  // --- Zoom State and Logic (All client-side logic stays here) ---
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Zoom State
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
 
-  // ... (Your existing handleMouseMove, handleMouseEnter, handleMouseLeave functions)
+  useEffect(() => {
+    fetchProductDetails();
+  }, [productId]);
+
+  const fetchProductDetails = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch product details
+      const response = await axios.get(`${apiBaseUrl}/products/${productId}`);
+      const productData = response.data;
+
+      // Parse Uses and Benefits if they're stringified arrays
+      if (productData.Uses && Array.isArray(productData.Uses)) {
+        productData.Uses = productData.Uses.flatMap((use: string) => {
+          try {
+            return JSON.parse(use);
+          } catch {
+            return use;
+          }
+        });
+      }
+
+      if (productData.Benefits && Array.isArray(productData.Benefits)) {
+        productData.Benefits = productData.Benefits.flatMap(
+          (benefit: string) => {
+            try {
+              return JSON.parse(benefit);
+            } catch {
+              return benefit;
+            }
+          }
+        );
+      }
+
+      setProduct(productData);
+
+      // Fetch related products from same category using category name endpoint
+      if (productData.categoryName) {
+        try {
+          const relatedResponse = await axios.get(
+            `${apiBaseUrl}/products/category/name/${encodeURIComponent(
+              productData.categoryName
+            )}`
+          );
+          const related = relatedResponse.data
+            .filter((p: Product) => p._id !== productId)
+            .slice(0, 3);
+          setRelatedProducts(related);
+        } catch (relatedErr) {
+          console.error("Error fetching related products:", relatedErr);
+          // If category endpoint fails, continue without related products
+          setRelatedProducts([]);
+        }
+      }
+    } catch (err: any) {
+      console.error("Error fetching product:", err);
+      setError(err.response?.data?.message || "Failed to load product details");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    // ... (zoom logic here)
     const { left, top, width, height } =
       e.currentTarget.getBoundingClientRect();
     const x = e.clientX - left;
@@ -81,21 +152,60 @@ export function ProductDetails({
     });
   };
 
-  const handleMouseEnter = () => {
-    setIsZoomed(true);
-  };
-
+  const handleMouseEnter = () => setIsZoomed(true);
   const handleMouseLeave = () => {
     setIsZoomed(false);
     setZoomStyle({});
   };
-  // ----------------------------
+
+  // Loading State
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-green-700 mx-auto mb-4" />
+          <p className="text-gray-600">Loading product details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error State
+  if (error || !product) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+            <p className="text-red-800 font-semibold mb-2">
+              Failed to load product
+            </p>
+            <p className="text-red-600 text-sm mb-4">
+              {error || "Product not found"}
+            </p>
+            <Link
+              href="/products"
+              className="inline-flex items-center text-green-700 hover:text-green-800 font-medium"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Products
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const imageUrl = product.image.startsWith("http")
+    ? product.image
+    : `${imageBaseUrl}/${product.image}`;
+
+  const whatsappLink = `https://wa.me/${whatsappNumber}?text=Hi, I'm interested in ${encodeURIComponent(
+    product.name
+  )} - ₹${product.price}`;
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b sticky top-0 z-10">
-        {" "}
-        {/* Made sticky for better navigation */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <Link
             href="/products"
@@ -109,70 +219,88 @@ export function ProductDetails({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid md:grid-cols-2 gap-12 mb-16">
-          {/* First Column: Image/Gallery - CHANGED TO MOTION COMPONENT */}
+          {/* Image Section */}
           <div>
-            {/* Main Image Container with fixed aspect ratio and ZOOM logic */}
-            <motion.div // Use motion.div instead of div for animation
-              className="relative pt-[100%] bg-white rounded-xl overflow-hidden shadow-2xl cursor-zoom-in group mb-4"
+            <motion.div
+              className="relative pt-[100%] bg-[#f9f9f9] rounded-xl overflow-hidden shadow-2xl cursor-zoom-in group mb-4"
               onMouseMove={handleMouseMove}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              // Framer Motion Props
               initial="hidden"
               animate="visible"
               variants={imageContainerVariants}
             >
               <Image
-                src={product.image}
+                src={imageUrl}
                 alt={product.name}
+                quality={100}
                 fill
-                sizes="(max-width: 768px) 100vw, 50vw" // Optimize image loading
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-contain transition-transform duration-100 ease-out"
-                style={zoomStyle} // Apply dynamic zoom style
+                style={zoomStyle}
                 priority
+                unoptimized
               />
             </motion.div>
 
-            {/* Simple Gallery Preview - (Consider making this interactive with state for a full solution) */}
-            {/* You could also wrap this in motion.div for animation */}
             <div className="flex gap-4">
               <div className="relative h-24 w-24 bg-white rounded-lg overflow-hidden shadow border-2 border-green-700 p-1">
                 <Image
-                  src={product.image}
+                  src={imageUrl}
                   alt={product.name}
+                  quality={100}
                   fill
                   sizes="96px"
                   className="object-contain"
+                  priority
+                  unoptimized
                 />
               </div>
-              {/* Add more thumbnails here if available */}
             </div>
           </div>
 
-          {/* Second Column: Details/CTA */}
-          {/* Wrap details in a motion.div for staggered animation */}
+          {/* Details Section */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ type: "tween", duration: 0.5, delay: 0.3 }}
           >
-            <div className="inline-block bg-green-100 text-green-800 text-sm font-semibold px-3 py-1 rounded-full mb-4">
-              {product.category}
+            <div className="inline-flex items-center gap-2">
+              <div className="bg-green-100 text-green-800 text-sm font-semibold px-3 py-1 rounded-full mb-4">
+                {product.categoryName}
+              </div>
+              {product.isNewProduct && (
+                <div className="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full mb-4">
+                  NEW
+                </div>
+              )}
             </div>
 
             <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
               {product.name}
             </h1>
 
-            <p className="text-4xl font-bold text-green-700 mb-6">
-              {product.price}
-            </p>
+            <div className="flex items-baseline gap-4 mb-6">
+              <p className="text-4xl font-bold text-green-700">
+                ₹{product.price.toLocaleString("en-IN")}
+              </p>
+              {product.quantity && (
+                <span className="text-gray-600 text-lg">
+                  / {product.quantity}
+                </span>
+              )}
+            </div>
 
-            <p className="text-gray-700 text-lg mb-8 leading-relaxed border-b pb-8">
+            <p className="text-gray-700 text-lg mb-6 leading-relaxed">
               {product.description}
             </p>
 
-            {/* CTA/Order Section */}
+            {product.special && (
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+                <p className="text-blue-900 font-medium">{product.special}</p>
+              </div>
+            )}
+
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -231,52 +359,80 @@ export function ProductDetails({
           </motion.div>
         </div>
 
-        {/* Product Specifications Section */}
+        {/* Specifications Section */}
         <div className="bg-white rounded-xl shadow-xl p-8 mb-16 mt-16 border-t-4 border-green-600">
           <div className="grid md:grid-cols-2 gap-8">
+            {/* Uses Section */}
+            {product.Uses && product.Uses.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="flex items-center space-x-2 mb-4">
+                  <FileText className="h-7 w-7 text-green-700" />
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Application & Usage
+                  </h2>
+                </div>
+                <ul className="space-y-3">
+                  {product.Uses.map((use, index) => (
+                    <li key={index} className="flex items-start">
+                      <Check className="h-5 w-5 text-green-600 mt-1 mr-2 flex-shrink-0" />
+                      <p className="text-gray-700 leading-relaxed">{use}</p>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+
+            {/* Benefits Section */}
+            {product.Benefits && product.Benefits.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <div className="flex items-center space-x-2 mb-4">
+                  <Info className="h-7 w-7 text-green-700" />
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Key Benefits
+                  </h2>
+                </div>
+                <ul className="space-y-3">
+                  {product.Benefits.map((benefit, index) => (
+                    <li key={index} className="flex items-start">
+                      <Check className="h-5 w-5 text-green-600 mt-1 mr-2 flex-shrink-0" />
+                      <p className="text-gray-700 leading-relaxed">{benefit}</p>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+          </div>
+
+          {/* Specifications if exists */}
+          {product.Specifications && (
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mt-8 pt-8 border-t"
             >
               <div className="flex items-center space-x-2 mb-4">
                 <Info className="h-7 w-7 text-green-700" />
                 <h2 className="text-2xl font-bold text-gray-900">
-                  Detailed Specifications
-                </h2>
-              </div>
-
-              {/* Check if details exist and display them as a list */}
-              <ul className="space-y-3">
-                {/* Map over the array to display each item */}
-                {product.details.map((detail, index) => (
-                  <li key={index} className="flex items-start">
-                    {/* Use a Check icon for a clean, professional bullet point */}
-                    <Check className="h-5 w-5 text-green-600 mt-1 mr-2 flex-shrink-0" />
-                    <p className="text-gray-700 leading-relaxed">{detail}</p>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <div className="flex items-center space-x-2 mb-4">
-                <FileText className="h-7 w-7 text-green-700" />
-                <h2 className="text-2xl font-bold text-gray-900">
-                  Application & Usage
+                  Specifications
                 </h2>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                {product.usageInstructions}
+                {product.Specifications}
               </p>
             </motion.div>
-          </div>
+          )}
         </div>
 
         {/* Related Products Section */}
@@ -288,11 +444,11 @@ export function ProductDetails({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {relatedProducts.map((relatedProduct, index) => (
                 <motion.div
-                  key={relatedProduct.id}
+                  key={relatedProduct._id}
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.1 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }} // Stagger related products
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   <ProductCard product={relatedProduct} />
                 </motion.div>
