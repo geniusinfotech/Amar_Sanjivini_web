@@ -14,7 +14,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Amar Sanjivani - Premium Fertilizers & Pesticides",
+  title: "Amar Sanjeevani - Premium Fertilizers & Pesticides",
   description:
     "Quality agricultural products including fertilizers, pesticides, herbicides, and fungicides. Trusted by farmers for superior crop health and yield.",
 };

@@ -274,7 +274,7 @@ export default function Home() {
             >
               <Image
                 src="/Logo/logo.png"
-                alt="About Amar Sanjivani"
+                alt="About Amar Sanjeevani"
                 fill
                 className="object-contain"
               />
@@ -282,7 +282,7 @@ export default function Home() {
 
             <motion.div variants={itemVariants}>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                About Amar Sanjivani
+                About Amar Sanjeevani
               </h2>
               <p className="text-gray-700 mb-4 leading-relaxed">
                 We are dedicated to providing farmers with premium quality

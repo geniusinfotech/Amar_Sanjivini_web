@@ -55,7 +55,7 @@ export default function AboutPage() {
         transition={{ duration: 0.5 }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">About Amar Sanjivani</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">About Amar Sanjeevani</h1>
           <p className="text-lg text-green-100 max-w-2xl">
             Your trusted partner in sustainable agriculture and crop excellence
           </p>
@@ -77,7 +77,7 @@ export default function AboutPage() {
           >
             <Image
               src="/image/worker.jpeg"
-              alt="Amar Sanjivani facilities"
+              alt="Amar Sanjeevani facilities"
               fill
               className="object-cover"
             />
@@ -86,7 +86,7 @@ export default function AboutPage() {
           <motion.div variants={slideUpVariants}>
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Who We Are</h2>
             <p className="text-gray-700 mb-4 leading-relaxed">
-              Amar Sanjivani is a leading supplier of premium agricultural inputs, specializing in high-quality fertilizers, pesticides, herbicides, and fungicides. With over a decade of experience in the agricultural sector, we have established ourselves as a trusted name among farmers and agricultural professionals.
+              Amar Sanjeevani is a leading supplier of premium agricultural inputs, specializing in high-quality fertilizers, pesticides, herbicides, and fungicides. With over a decade of experience in the agricultural sector, we have established ourselves as a trusted name among farmers and agricultural professionals.
             </p>
             <p className="text-gray-700 mb-4 leading-relaxed">
               Our commitment to quality and customer satisfaction has helped thousands of farmers achieve better yields and healthier crops. We understand that agriculture is not just a profession but a way of life, and we are dedicated to supporting farmers at every step of their journey.
@@ -164,7 +164,7 @@ export default function AboutPage() {
                 viewport={{ once: true }}
                 variants={containerVariants}
             >
-              <h2 className="text-3xl font-bold mb-6">Why Choose Amar Sanjivani?</h2>
+              <h2 className="text-3xl font-bold mb-6">Why Choose Amar Sanjeevani?</h2>
               <ul className="space-y-4">
                 {/* Apply slideUpVariants to each list item for a nice staggered effect */}
                 <motion.li className="flex items-start" variants={slideUpVariants}>

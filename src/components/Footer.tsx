@@ -24,7 +24,7 @@ export function Footer() {
                 />
               </div>
               <span className="text-lg sm:text-xl font-bold whitespace-nowrap">
-                Amar Sanjivani
+                Amar Sanjeevani
               </span>
             </div>
             <p className="text-green-100 text-sm sm:text-base leading-relaxed">
@@ -112,7 +112,7 @@ export function Footer() {
         <div className="border-t border-green-800 mt-10 pt-6 text-center text-green-100 text-sm sm:text-base">
           <p className="flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-2">
             <span>
-              &copy; {new Date().getFullYear()} Amar Sanjivani. All rights
+              &copy; {new Date().getFullYear()} Amar Sanjeevani. All rights
               reserved.
             </span>
             <span className="hidden sm:inline">|</span>

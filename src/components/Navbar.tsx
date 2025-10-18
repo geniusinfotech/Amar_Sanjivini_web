@@ -31,7 +31,7 @@ export function Navbar() {
               />
             </div>
             <span className="text-xl font-bold text-green-800">
-              Amar Sanjivani
+              Amar Sanjeevani
             </span>
           </Link>
 
