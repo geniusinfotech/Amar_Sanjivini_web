@@ -73,7 +73,7 @@ const TestimonialAdminForm: React.FC<TestimonialFormProps> = ({
 
   // 2. New states for file upload management
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [useUrlInput, setUseUrlInput] = useState(true); // Toggle between URL input and File input
+  const [_useUrlInput, setUseUrlInput] = useState(true); // Toggle between URL input and File input
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{
@@ -136,7 +136,7 @@ const TestimonialAdminForm: React.FC<TestimonialFormProps> = ({
     form.append("isActive", String(formData.isActive));
     form.append(
       "videoLink",
-      formData.mediaType === "video" ? formData.videoLink : ""
+      formData.mediaType === "video" ? formData.videoLink || "" : ""
     );
 
     if (formData.mediaType === "image" && imageFile) {
@@ -388,13 +388,12 @@ export default function TestimonialAdminDashboard() {
       setIsLoadingList(false);
     }
   };
-
   useEffect(() => {
     // Only fetch data if the user is confirmed to be an admin
     if (isAdmin) {
       fetchAllTestimonials();
     }
-  }, [isAdmin]); // Depend on isAdmin to trigger the fetch
+  }, [isAdmin, getTokenConfig]); // Depend on isAdmin to trigger the fetch
 
   const handleEdit = (testimonial: TestimonialData) => {
     setSelectedTestimonial(testimonial);

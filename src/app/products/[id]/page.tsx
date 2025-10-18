@@ -1,6 +1,5 @@
-// NO 'use client' directive here - This is a Server Component!
-
 import { notFound } from "next/navigation";
+import axios from "axios";
 import { ProductDetails } from "./ProductDetails"; // Import the Client Component
 
 // Use dynamic rendering since we're fetching from an API
@@ -30,7 +29,7 @@ export default async function ProductPage({
   );
 }
 
-// ✅ Updated generateMetadata (same async pattern)
+// ✅ Updated generateMetadata using axios
 export async function generateMetadata({
   params,
 }: {
@@ -39,18 +38,16 @@ export async function generateMetadata({
   const { id } = await params;
 
   try {
-    const response = await fetch(
+    const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_BASE}/products/${id}`,
-      { cache: "no-store" }
+      {
+        headers: {
+          "Cache-Control": "no-cache",
+        },
+      }
     );
 
-    if (!response.ok) {
-      return {
-        title: "Product Not Found",
-      };
-    }
-
-    const product = await response.json();
+    const product = response.data;
 
     return {
       title: `${product.name} - Amar Sanjivini`,
@@ -70,7 +67,7 @@ export async function generateMetadata({
   } catch (error) {
     console.error("Error generating metadata:", error);
     return {
-      title: "Product",
+      title: "Product - Amar Sanjivini",
     };
   }
 }

@@ -66,71 +66,72 @@ export function ProductDetails({
   const [error, setError] = useState<string | null>(null);
 
   // Zoom State
-  const [isZoomed, setIsZoomed] = useState(false);
+  const [_isZoomed, setIsZoomed] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
 
   useEffect(() => {
-    fetchProductDetails();
-  }, [productId]);
+    const fetchProductDetails = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-  const fetchProductDetails = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+        // Fetch product details
+        const response = await axios.get(`${apiBaseUrl}/products/${productId}`);
+        const productData = response.data;
 
-      // Fetch product details
-      const response = await axios.get(`${apiBaseUrl}/products/${productId}`);
-      const productData = response.data;
-
-      // Parse Uses and Benefits if they're stringified arrays
-      if (productData.Uses && Array.isArray(productData.Uses)) {
-        productData.Uses = productData.Uses.flatMap((use: string) => {
-          try {
-            return JSON.parse(use);
-          } catch {
-            return use;
-          }
-        });
-      }
-
-      if (productData.Benefits && Array.isArray(productData.Benefits)) {
-        productData.Benefits = productData.Benefits.flatMap(
-          (benefit: string) => {
+        // Parse Uses and Benefits if they're stringified arrays
+        if (productData.Uses && Array.isArray(productData.Uses)) {
+          productData.Uses = productData.Uses.flatMap((use: string) => {
             try {
-              return JSON.parse(benefit);
+              return JSON.parse(use);
             } catch {
-              return benefit;
+              return use;
             }
-          }
-        );
-      }
-
-      setProduct(productData);
-
-      // Fetch related products from same category using category name endpoint
-      if (productData.categoryName && apiBaseUrl) {
-        try {
-          const relatedResponse = await axios.get(
-            `${apiBaseUrl}/products/category/name/${encodeURIComponent(
-              productData.categoryName
-            )}`
-          );
-          const related = (relatedResponse.data || [])
-            .filter((p: Product) => p._id !== productId)
-            .slice(0, 3);
-          setRelatedProducts(related);
-        } catch (err) {
-          console.error("Error fetching related products:", err);
-          setRelatedProducts([]);
+          });
         }
+
+        if (productData.Benefits && Array.isArray(productData.Benefits)) {
+          productData.Benefits = productData.Benefits.flatMap(
+            (benefit: string) => {
+              try {
+                return JSON.parse(benefit);
+              } catch {
+                return benefit;
+              }
+            }
+          );
+        }
+
+        setProduct(productData);
+
+        // Fetch related products from same category using category name endpoint
+        if (productData.categoryName && apiBaseUrl) {
+          try {
+            const relatedResponse = await axios.get(
+              `${apiBaseUrl}/products/category/name/${encodeURIComponent(
+                productData.categoryName
+              )}`
+            );
+            const related = (relatedResponse.data || [])
+              .filter((p: Product) => p._id !== productId)
+              .slice(0, 3);
+            setRelatedProducts(related);
+          } catch (err) {
+            console.error("Error fetching related products:", err);
+            setRelatedProducts([]);
+          }
+        }
+      } catch (err: any) {
+        console.error("Error fetching product:", err);
+        setError(
+          err.response?.data?.message || "Failed to load product details"
+        );
+      } finally {
+        setLoading(false);
       }
-    } catch (err: any) {
-      console.error("Error fetching product:", err);
-      setError(err.response?.data?.message || "Failed to load product details");
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+    fetchProductDetails();
+  }, [productId, apiBaseUrl]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } =

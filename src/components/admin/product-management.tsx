@@ -57,7 +57,7 @@ export default function ProductManagement(): React.JSX.Element {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
-  const [sortBy, setSortBy] = useState<string>("");
+  const [sortBy, _setSortBy] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
 
   /** Fetch Products */
@@ -129,7 +129,7 @@ export default function ProductManagement(): React.JSX.Element {
   }, [products, searchQuery, categoryFilter, sortBy]);
 
   /** CRUD Handlers */
-  const handleAddProduct = async (productData: any) => {
+  const handleAddProduct = async (productData: FormData) => {
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE}/products`,
@@ -146,7 +146,7 @@ export default function ProductManagement(): React.JSX.Element {
       });
       setIsAddDialogOpen(false);
       await fetchProducts();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Add Product Error:", error);
       toast({
         title: "Action Failed",
@@ -156,7 +156,7 @@ export default function ProductManagement(): React.JSX.Element {
     }
   };
 
-  const handleEditProduct = async (productData: any) => {
+  const handleEditProduct = async (productData: FormData) => {
     if (!selectedProduct) return;
     try {
       const res = await axios.patch(
@@ -175,7 +175,7 @@ export default function ProductManagement(): React.JSX.Element {
       setIsEditDialogOpen(false);
       setSelectedProduct(null);
       await fetchProducts();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Edit Product Error:", error);
       toast({
         title: "Action Failed",

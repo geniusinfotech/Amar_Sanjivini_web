@@ -30,7 +30,7 @@ export function Navbar() {
                 className="object-contain"
               />
             </div>
-            <span className="text-xl font-bold text-green-800">
+            <span className="text-3xl font-bold text-green-800">
               Amar Sanjeevani
             </span>
           </Link>

@@ -13,7 +13,7 @@ const fadeInFromBottom = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: { duration: 0.6, ease: "easeOut" as any },
   },
 };
 
@@ -33,7 +33,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: "easeOut" },
+    transition: { duration: 0.5, ease: "easeOut" as any },
   },
 };
 
@@ -65,10 +65,6 @@ export default function FeaturedProducts({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -93,6 +89,10 @@ export default function FeaturedProducts({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchProducts();
+  }, [apiBaseUrl]);
 
   // Loading state
   if (loading) {

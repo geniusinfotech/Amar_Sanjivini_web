@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
+import { AxiosRequestConfig } from "axios";
 
 interface UserProfile {
   id: string;
@@ -31,13 +32,13 @@ interface AuthContextType {
   ) => void;
   logout: () => void;
   hasRole: (roleName: string) => boolean;
-  getTokenConfig: (config?: any) => any;
+  getTokenConfig: (config?: AxiosRequestConfig) => AxiosRequestConfig;
 }
 
 interface DecodedToken {
   exp: number; // expiry time (in seconds)
   sub?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -167,7 +168,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   // ✅ Helper for axios API calls with token
-  const getTokenConfig = (config: any = {}) => {
+  const getTokenConfig = (
+    config: AxiosRequestConfig = {}
+  ): AxiosRequestConfig => {
     if (!access_token) return config;
     return {
       ...config,
