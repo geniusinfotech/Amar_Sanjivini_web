@@ -57,7 +57,7 @@ export default function ProductManagement(): React.JSX.Element {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
-  const [sortBy, _setSortBy] = useState<string>("");
+  const [sortBy, _] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
 
   /** Fetch Products */
@@ -444,18 +444,18 @@ const SkeletonLoader = ({ count = 3 }: { count?: number }) => (
 );
 
 /** Normalize product data */
-function normalizeProduct(raw: any): Product {
-  const imageFile = raw.image ?? raw.images?.[0] ?? "";
+function normalizeProduct(raw: Product): Product {
+  const imageFile = raw.image ?? "";
   const imageUrl = imageFile?.startsWith("https")
     ? imageFile
     : `${process.env.NEXT_PUBLIC_API_BASE}/uploads/${imageFile}`;
 
   return {
-    id: String(raw.id ?? raw._id ?? Math.random()),
+    id: String(raw.id ?? Math.random()),
     name: raw.name ?? "Unnamed Product",
     description: raw.description ?? "",
-    categoryName: raw.categoryName ?? raw.category?.name ?? "Uncategorized",
-    categoryId: raw.categoryId ?? raw.category?._id ?? "",
+    categoryName: raw.categoryName ?? "Uncategorized",
+    categoryId: raw.categoryId ?? "",
     price: Number(raw.price ?? 0),
     image: imageUrl,
     createdAt: raw.createdAt ?? new Date().toISOString(),

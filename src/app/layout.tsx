@@ -67,7 +67,6 @@ export const metadata: Metadata = {
   },
 
   // 6. VIEWPORT & ROBOTS (Crucial for modern web and indexing)
-  viewport: "width=device-width, initial-scale=1",
   robots: {
     index: true,
     follow: true,

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { motion } from "framer-motion";
 import { Trash2, Edit, CheckCircle, XCircle } from "lucide-react"; // Added new icons
 
@@ -36,7 +36,7 @@ interface TestimonialFormProps {
   initialData?: TestimonialData | null;
   onSuccess: () => void;
   isAdmin: boolean;
-  getTokenConfig: (config?: any) => any;
+  getTokenConfig: (config?: AxiosRequestConfig) => AxiosRequestConfig;
 }
 
 // 1. New function to handle the secure file upload
@@ -73,7 +73,7 @@ const TestimonialAdminForm: React.FC<TestimonialFormProps> = ({
 
   // 2. New states for file upload management
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [_useUrlInput, setUseUrlInput] = useState(true); // Toggle between URL input and File input
+  const [_, setUseUrlInput] = useState(true); // Toggle between URL input and File input
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{

@@ -46,7 +46,7 @@ const imageContainerVariants = {
     scale: 1,
     y: 0,
     transition: {
-      type: "spring" as any,
+      type: "spring" as const,
       stiffness: 100,
       damping: 10,
       delay: 0.1,
@@ -66,7 +66,7 @@ export function ProductDetails({
   const [error, setError] = useState<string | null>(null);
 
   // Zoom State
-  const [_isZoomed, setIsZoomed] = useState(false);
+  const [_, setIsZoomed] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
 
   useEffect(() => {

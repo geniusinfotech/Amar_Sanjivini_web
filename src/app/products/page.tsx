@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ProductCard from "@/components/card/ProductCard";
-import { Filter, Search, Loader2 } from "lucide-react";
+import { Filter, Search } from "lucide-react";
 
 interface Product {
   _id: string;

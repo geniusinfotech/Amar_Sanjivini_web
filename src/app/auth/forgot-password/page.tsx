@@ -35,6 +35,8 @@ const ForgotPasswordForm: React.FC = () => {
       setEmail("");
     } catch (err) {
       // Show success message even on client-side API error for security
+      console.error("Error fetching products:", err);
+
       setMessage({
         text: "If the email exists, a password reset link has been sent to your inbox. Check your email (and spam folder).",
         type: "success",
