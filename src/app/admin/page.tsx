@@ -15,7 +15,6 @@ import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import TestimonialAdminDashboard from "@/components/admin/testimonial-mangement";
 import Image from "next/image";
-import { CustomerManagement } from "@/components/admin/customer-management";
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
@@ -315,9 +314,7 @@ export default function AdminDashboard() {
               )}
 
               {activeTab === "customers" && (
-                <div className="p-4 sm:p-6">
-                  <CustomerManagement />
-                </div>
+                <div className="p-4 sm:p-6">Comming Soon</div>
               )}
 
               {activeTab === "Testimonials" && (

@@ -26,7 +26,7 @@ const slideUpVariants = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: "easeOut",
+      ease: "easeOut" as any,
     },
   },
 };
@@ -39,7 +39,7 @@ const imageVariants = {
         scale: 1,
         transition: {
             duration: 0.8,
-            ease: "easeOut",
+            ease: "easeOut" as any,
         },
     },
 };

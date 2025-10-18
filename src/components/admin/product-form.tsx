@@ -128,56 +128,6 @@ export default function ProductForm({
     return true;
   };
 
-  // const handleSubmit = async (e: FormEvent) => {
-  //   e.preventDefault();
-  //   if (!validateForm()) return;
-  //   setLoading(true);
-
-  //   try {
-  //     const data = new FormData();
-
-  //     data.append("name", formData.name);
-  //     data.append("description", formData.description);
-  //     data.append("price", String(formData.price));
-  //     data.append("categoryName", formData.categoryName);
-  //     data.append("categoryId", formData.categoryId);
-  //     data.append("isNewProduct", formData.isNewProduct ? "true" : "false");
-  //     data.append("special", formData.special || "");
-  //     data.append("Specifications", formData.Specifications || "");
-  //     data.append("quantity", formData.quantity || "");
-
-  //     // Send Uses and Benefits as JSON arrays
-  //     const filteredUses = (formData.Uses || []).filter(
-  //       (use) => use.trim() !== ""
-  //     );
-  //     const filteredBenefits = (formData.Benefits || []).filter(
-  //       (benefit) => benefit.trim() !== ""
-  //     );
-  //     filteredUses.forEach((use) => data.append("Uses", use));
-  //     filteredBenefits.forEach((benefit) => data.append("Benefits", benefit));
-
-  //     if (formData.image instanceof File) {
-  //       data.append("image", formData.image);
-  //     } else if (typeof formData.image === "string") {
-  //       data.append("image", formData.image);
-  //     } else {
-  //       alert("Please select an image");
-  //       setLoading(false);
-  //       return;
-  //     }
-
-  //     if (onSubmit) await onSubmit(data);
-  //     alert("Product saved successfully");
-  //   } catch (err: any) {
-  //     console.error(err);
-  //     alert(err?.response?.data?.message || "Error saving product");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // Inside ProductForm component...
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -192,7 +142,8 @@ export default function ProductForm({
       data.append("price", String(formData.price));
       data.append("categoryName", formData.categoryName);
       data.append("categoryId", formData.categoryId);
-      data.append("isNewProduct", formData.isNewProduct ? "false" : "true");
+      data.append("isNewProduct", formData.isNewProduct ? "true" : "false");
+
       data.append("special", formData.special || "");
       data.append("Specifications", formData.Specifications || "");
       data.append("quantity", formData.quantity || "");

@@ -2,7 +2,7 @@ export interface Product {
   id: string;
   name: string;
   price: string;
-  category: "Fertilizers" | "Pesticides" | "Herbicides" | "Fungicides";
+  category: string;
   image: string;
   description: string;
   details: string[];

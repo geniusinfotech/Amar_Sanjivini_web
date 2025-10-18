@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, } from "framer-motion";
 import { getFeaturedProducts } from "@/lib/products";
 import { ArrowRight, Leaf, Shield, Truck, Award } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -44,7 +44,7 @@ const contentVariants = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: "easeOut",
+      ease: "easeOut" as any,
     },
   },
   exit: {
@@ -66,7 +66,7 @@ const imageVariants = {
     scale: 1,
     transition: {
       duration: 0.6,
-      ease: "easeOut",
+      ease: "easeOut" as any,
     },
   },
   exit: {
@@ -94,24 +94,13 @@ const itemVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      type: "spring",
+      type: "spring" as any,
       stiffness: 100,
       damping: 10,
     },
   },
 };
 
-const fadeInFromBottom = {
-  hidden: { opacity: 0, y: 50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut",
-    },
-  },
-};
 
 export default function Home() {
   const featuredProducts = getFeaturedProducts();

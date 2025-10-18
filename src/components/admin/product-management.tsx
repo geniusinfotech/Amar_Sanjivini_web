@@ -34,20 +34,13 @@ interface Product {
   description?: string;
   categoryName: string;
   categoryId?: string;
-  subcategory?: string;
   price: number;
-  discount?: number;
-  discountPrice?: number;
-  stock: number;
-  material?: string;
-  occasion?: string;
-  colors?: string[];
-  fabric?: string;
-  weight?: string;
-  width?: string;
-  length?: string;
-  pattern?: string;
-  status: "active" | "inactive" | "out-of-stock";
+  isNewProduct?: boolean;
+  special?: string;
+  Specifications?: string;
+  Uses?: string[];
+  Benefits?: string[];
+  quantity?: string;
   image?: string;
   createdAt: string;
   updatedAt: string;
@@ -114,15 +107,7 @@ export default function ProductManagement(): React.JSX.Element {
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       list = list.filter((p) =>
-        [
-          p.name,
-          p.categoryName,
-          p.subcategory,
-          p.description,
-          p.material,
-          p.occasion,
-          p.colors?.join(", "),
-        ]
+        [p.name, p.categoryName, p.description]
           .filter(Boolean)
           .some((v) => v!.toLowerCase().includes(q))
       );
@@ -355,7 +340,7 @@ export default function ProductManagement(): React.JSX.Element {
                     </TableCell>
 
                     <TableCell>{p.categoryName}</TableCell>
-                    <TableCell>₹{p.price.toLocaleString()}</TableCell>
+                    <TableCell>₹ {p.price.toLocaleString()}</TableCell>
                     <TableCell>
                       {new Date(p.createdAt).toLocaleDateString()}
                     </TableCell>
@@ -409,29 +394,27 @@ export default function ProductManagement(): React.JSX.Element {
           <DialogHeader>
             <DialogTitle>Edit Product</DialogTitle>
           </DialogHeader>
-          <ProductForm
-            product={
-              selectedProduct
-                ? {
-                    ...selectedProduct,
-                    width:
-                      typeof selectedProduct.width === "string"
-                        ? isNaN(Number(selectedProduct.width))
-                          ? ""
-                          : Number(selectedProduct.width)
-                        : selectedProduct.width,
-                    length:
-                      typeof selectedProduct.length === "string"
-                        ? isNaN(Number(selectedProduct.length))
-                          ? ""
-                          : Number(selectedProduct.length)
-                        : selectedProduct.length,
-                  }
-                : undefined
-            }
-            onSubmit={handleEditProduct}
-            onCancel={() => setIsAddDialogOpen(false)}
-          />
+          {selectedProduct && (
+            <ProductForm
+              product={{
+                id: selectedProduct.id,
+                name: selectedProduct.name,
+                description: selectedProduct.description,
+                price: selectedProduct.price,
+                categoryName: selectedProduct.categoryName,
+                categoryId: selectedProduct.categoryId,
+                image: selectedProduct.image,
+                isNewProduct: selectedProduct.isNewProduct,
+                special: selectedProduct.special,
+                Specifications: selectedProduct.Specifications,
+                Uses: selectedProduct.Uses,
+                Benefits: selectedProduct.Benefits,
+                quantity: selectedProduct.quantity,
+              }}
+              onSubmit={handleEditProduct}
+              onCancel={() => setIsEditDialogOpen(false)}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>
@@ -473,24 +456,7 @@ function normalizeProduct(raw: any): Product {
     description: raw.description ?? "",
     categoryName: raw.categoryName ?? raw.category?.name ?? "Uncategorized",
     categoryId: raw.categoryId ?? raw.category?._id ?? "",
-    subcategory: raw.subcategory ?? raw.subCategory ?? "",
     price: Number(raw.price ?? 0),
-    discount: raw.discount ?? undefined,
-    discountPrice: raw.discountPrice ?? raw.salePrice ?? undefined,
-    stock: Number(raw.stock ?? 0),
-    material: raw.material ?? "",
-    occasion: raw.occasion ?? "",
-    colors: Array.isArray(raw.colors)
-      ? raw.colors
-      : raw.colors
-      ? [raw.colors]
-      : [],
-    fabric: raw.fabric ?? "",
-    weight: raw.weight ?? "",
-    width: raw.width ?? "",
-    length: raw.length ?? "",
-    pattern: raw.pattern ?? "",
-    status: raw.status ?? (raw.stock === 0 ? "out-of-stock" : "active"),
     image: imageUrl,
     createdAt: raw.createdAt ?? new Date().toISOString(),
     updatedAt: raw.updatedAt ?? new Date().toISOString(),

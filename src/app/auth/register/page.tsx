@@ -5,7 +5,6 @@ import { User } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import GoogleLoginButton from "@/components/ui/GoogleLoginButton";
 
 interface FormData {
   username: string;
@@ -169,11 +168,6 @@ const RegisterPage: React.FC = () => {
               {isLoading ? "Creating account..." : "Sign Up"}
             </button>
           </form>
-
-          {/* Google Login Button */}
-          <div className="mt-5 flex items-center justify-center">
-            <GoogleLoginButton />
-          </div>
 
           <div className="mt-6 text-center">
             <p className="text-[#ffe7d6]">

@@ -88,7 +88,7 @@ export default function ProductCard({
         <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
           <div>
             <p className="text-2xl font-bold text-green-700">
-              ₹{product.price.toLocaleString("en-IN")}
+              ₹ {product.price.toLocaleString("en-IN")}
             </p>
             <p className="text-xs text-gray-500">Inclusive of all taxes</p>
           </div>

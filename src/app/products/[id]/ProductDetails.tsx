@@ -46,7 +46,7 @@ const imageContainerVariants = {
     scale: 1,
     y: 0,
     transition: {
-      type: "spring",
+      type: "spring" as any,
       stiffness: 100,
       damping: 10,
       delay: 0.1,
@@ -56,7 +56,7 @@ const imageContainerVariants = {
 
 export function ProductDetails({
   productId,
-  apiBaseUrl = process.env.NEXT_PUBLIC_API_URL,
+  apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE,
   imageBaseUrl = process.env.NEXT_PUBLIC_IMAGE_URL,
   whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER,
 }: ProductDetailsProps) {
@@ -108,20 +108,19 @@ export function ProductDetails({
       setProduct(productData);
 
       // Fetch related products from same category using category name endpoint
-      if (productData.categoryName) {
+      if (productData.categoryName && apiBaseUrl) {
         try {
           const relatedResponse = await axios.get(
             `${apiBaseUrl}/products/category/name/${encodeURIComponent(
               productData.categoryName
             )}`
           );
-          const related = relatedResponse.data
+          const related = (relatedResponse.data || [])
             .filter((p: Product) => p._id !== productId)
             .slice(0, 3);
           setRelatedProducts(related);
-        } catch (relatedErr) {
-          console.error("Error fetching related products:", relatedErr);
-          // If category endpoint fails, continue without related products
+        } catch (err) {
+          console.error("Error fetching related products:", err);
           setRelatedProducts([]);
         }
       }
@@ -201,7 +200,7 @@ export function ProductDetails({
 
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=Hi, I'm interested in ${encodeURIComponent(
     product.name
-  )} - ₹${product.price}`;
+  )} - ₹ ${product.price}`;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -282,7 +281,7 @@ export function ProductDetails({
 
             <div className="flex items-baseline gap-4 mb-6">
               <p className="text-4xl font-bold text-green-700">
-                ₹{product.price.toLocaleString("en-IN")}
+                ₹ {product.price.toLocaleString("en-IN")}
               </p>
               {product.quantity && (
                 <span className="text-gray-600 text-lg">
@@ -442,15 +441,29 @@ export function ProductDetails({
               You Might Also Like
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {relatedProducts.map((relatedProduct, index) => (
+              {relatedProducts.map((relatedProducts, index) => (
                 <motion.div
-                  key={relatedProduct._id}
+                  key={relatedProducts._id}
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.1 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <ProductCard product={relatedProduct} />
+                  <ProductCard
+                    product={{
+                      id: relatedProducts._id,
+                      name: relatedProducts.name,
+                      description: relatedProducts.description,
+                      price: relatedProducts.price.toString(),
+                      category: relatedProducts.categoryName,
+                      details: [relatedProducts.description],
+                      usageInstructions: (relatedProducts.Uses || []).join(
+                        ", "
+                      ),
+                      featured: relatedProducts.isNewProduct,
+                      image: relatedProducts.image,
+                    }}
+                  />
                 </motion.div>
               ))}
             </div>
