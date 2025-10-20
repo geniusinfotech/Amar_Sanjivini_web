@@ -7,7 +7,7 @@ import Link from "next/link";
 import axios from "axios";
 import ProductCard from "@/components/card/ProductCard"; // Adjust the import path as needed
 
-// Animation variants
+// Animation variants (Unchanged)
 const fadeInFromBottom = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -37,6 +37,7 @@ const itemVariants = {
   },
 };
 
+// --- Product Interface (Updated to include createdAt) ---
 interface Product {
   _id: string;
   id?: string;
@@ -52,6 +53,7 @@ interface Product {
   Uses?: string[];
   Benefits?: string[];
   quantity?: string;
+  createdAt: string | { $date: string }; // Handles MongoDB date format or ISO string
 }
 
 interface FeaturedProductsProps {
@@ -63,20 +65,41 @@ export default function FeaturedProducts({
 }: FeaturedProductsProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null); // Helper function to correctly extract the date string for sorting
+
+  const getDateValue = (product: Product): string => {
+    if (typeof product.createdAt === "string") {
+      return product.createdAt;
+    }
+    if (
+      typeof product.createdAt === "object" &&
+      product.createdAt &&
+      "$date" in product.createdAt
+    ) {
+      return product.createdAt.$date;
+    }
+    return "1970-01-01T00:00:00.000Z"; // Fallback to epoch
+  };
 
   const fetchProducts = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await axios.get(`${apiBaseUrl}/products/simple`);
+      const response = await axios.get<Product[]>(
+        `${apiBaseUrl}/products/simple`
+      );
+      const rawProducts = response.data; // 1. Sort the products: Newest product first (Descending order)
 
-      // Get the latest 6 products (assuming they're sorted by creation date)
-      const latestProducts = response.data.slice(0, 6);
+      const sortedProducts = rawProducts.sort((a, b) => {
+        const dateA = new Date(getDateValue(a)).getTime();
+        const dateB = new Date(getDateValue(b)).getTime(); // Descending sort (Newest first): b - a
 
-      // Normalize the data to ensure consistent id field
-      const normalizedProducts = latestProducts.map((product: Product) => ({
+        return dateB - dateA;
+      }); // 2. Get the latest 6 products from the sorted list
+      const latestProducts = sortedProducts.slice(0, 6); // Normalize the data to ensure consistent id field
+
+      const normalizedProducts = latestProducts.map((product) => ({
         ...product,
         id: product._id || product.id,
       }));
@@ -92,28 +115,26 @@ export default function FeaturedProducts({
 
   useEffect(() => {
     fetchProducts();
-  }, [apiBaseUrl]);
+  }, [apiBaseUrl]); // --- Component Render (Loading, Error, Empty, Success) --- // Loading state
 
-  // Loading state
   if (loading) {
     return (
-      <section className="py-16 bg-white">
+      <section className="py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="text-center">
               <Loader2 className="w-12 h-12 animate-spin text-green-700 mx-auto mb-4" />
-              <p className="text-gray-600">Loading featured products...</p>
+              <p className="text-gray-600">Loading featured products...</p> {" "}
             </div>
           </div>
-        </div>
+        </div>{" "}
       </section>
     );
-  }
+  } // Error state
 
-  // Error state
   if (error) {
     return (
-      <section className="py-16 bg-white">
+      <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="text-center">
@@ -121,7 +142,7 @@ export default function FeaturedProducts({
                 <p className="text-red-800 font-semibold mb-2">
                   Unable to load products
                 </p>
-                <p className="text-red-600 text-sm mb-4">{error}</p>
+                <p className="text-red-600 text-sm mb-4">{error}</p> {" "}
                 <button
                   onClick={fetchProducts}
                   className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
@@ -131,43 +152,45 @@ export default function FeaturedProducts({
               </div>
             </div>
           </div>
-        </div>
+        </div>{" "}
       </section>
     );
-  }
+  } // Empty state
 
-  // Empty state
   if (products.length === 0) {
     return (
-      <section className="py-16 bg-white">
+      <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Featured Products
+              પ્રોડક્ટ્સ
             </h2>
+
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Explore our best-selling fertilizers and pesticides trusted by
-              farmers for superior crop health and yield
+              ઉત્તમ પાક આરોગ્ય અને ઉપજ માટે ખેડૂતો દ્વારા વિશ્વસનીય અમારા સૌથી
+              વધુ વેચાતા ખાતરો
             </p>
           </div>
+
           <div className="flex justify-center items-center min-h-[300px]">
             <div className="text-center">
               <p className="text-gray-600 text-lg">
-                No products available at the moment
+                No products available at the moment{" "}
               </p>
+
               <p className="text-gray-500 text-sm mt-2">
                 Check back soon for new arrivals!
               </p>
             </div>
           </div>
-        </div>
+        </div>{" "}
       </section>
     );
-  }
+  } // Success state with products
 
-  // Success state with products
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16">
+      {" "}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-12"
@@ -176,15 +199,15 @@ export default function FeaturedProducts({
           viewport={{ once: true, amount: 0.3 }}
           variants={fadeInFromBottom}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Featured Products
+          <h2 className="text-3xl md:text-4xl font-extrabold text-green-800 mb-4">
+            પ્રોડક્ટ્સ
           </h2>
+
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Explore our best-selling fertilizers and pesticides trusted by
-            farmers for superior crop health and yield
+            ઉત્તમ પાક આરોગ્ય અને ઉપજ માટે ખેડૂતો દ્વારા વિશ્વસનીય અમારા સૌથી વધુ
+            વેચાતા ખાતરો
           </p>
         </motion.div>
-
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           initial="hidden"
@@ -194,11 +217,12 @@ export default function FeaturedProducts({
         >
           {products.map((product) => (
             <motion.div key={product.id} variants={itemVariants}>
-              <ProductCard product={product} />
+              <Link href={`/products/${product._id}`}>
+                <ProductCard product={product} /> 
+              </Link>
             </motion.div>
           ))}
         </motion.div>
-
         <motion.div
           className="text-center mt-12"
           initial="hidden"
@@ -210,11 +234,11 @@ export default function FeaturedProducts({
             href="/products"
             className="inline-flex items-center bg-green-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-800 transition-colors"
           >
-            View All Products
-            <ArrowRight className="ml-2 h-5 w-5" />
+            બધા પ્રોડક્ટ્સ
+            <ArrowRight className="ml-2 h-5 w-5" /> 
           </Link>
-        </motion.div>
-      </div>
+        </motion.div>{" "}
+      </div>{" "}
     </section>
   );
 }

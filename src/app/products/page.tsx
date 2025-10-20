@@ -145,14 +145,16 @@ export default function ProductsPage() {
 
   // ---- UI ----
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-green-100 to-green-200">
       {/* Header */}
       <div className="bg-gradient-to-r from-green-700 to-green-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Products</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            અમારા ઉત્પાદનો
+          </h1>
           <p className="text-lg text-green-100 max-w-2xl">
-            Browse our complete range of premium agricultural products —
-            fertilizers, pesticides, herbicides, and more.
+            ખાતરો, જંતુનાશકો, હર્બિસાઇડ્સ અને વધુ - અમારા પ્રીમિયમ કૃષિ
+            ઉત્પાદનોની સંપૂર્ણ શ્રેણી બ્રાઉઝ કરો.
           </p>
         </div>
       </div>
@@ -162,10 +164,10 @@ export default function ProductsPage() {
         {/* Header Row */}
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold text-gray-900">
-            {selectedCategory === "All" ? "All Products" : selectedCategory}
+            {selectedCategory === "All" ? "બધા પ્રોડક્ટસ્" : selectedCategory}
             <span className="ml-2 text-gray-500 text-lg font-normal">
               ({products.length}{" "}
-              {products.length === 1 ? "product" : "products"})
+              {products.length === 1 ? "પ્રોડક્ટ" : "પ્રોડક્ટસ્"})
             </span>
           </h2>
 
@@ -179,13 +181,13 @@ export default function ProductsPage() {
         </div>
 
         {/* Filters */}
-        <div
+        {/* <div
           className={`${
             isFilterOpen ? "block" : "hidden"
           } md:block mb-6 space-y-4`}
-        >
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="flex gap-3">
+        > */}
+        {/* Search Bar */}
+        {/* <form onSubmit={handleSearch} className="flex gap-3">
             <div className="relative flex-1">
               <input
                 type="text"
@@ -201,10 +203,10 @@ export default function ProductsPage() {
                 <Search className="h-5 w-5" />
               </button>
             </div>
-          </form>
+          </form> */}
 
-          {/* Category Filter */}
-          <div className="flex flex-wrap gap-2">
+        {/* Category Filter */}
+        {/* <div className="flex flex-wrap gap-2">
             {categories.map((category) => (
               <button
                 key={category}
@@ -218,10 +220,10 @@ export default function ProductsPage() {
                 {category}
               </button>
             ))}
-          </div>
+          </div> */}
 
-          {/* Price Range Filter */}
-          <div className="flex flex-wrap gap-3 items-center">
+        {/* Price Range Filter */}
+        {/* <div className="flex flex-wrap gap-3 items-center">
             <input
               type="number"
               placeholder="Min Price"
@@ -255,8 +257,8 @@ export default function ProductsPage() {
                 Clear
               </button>
             )}
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
 
         {/* Product Grid */}
         {loading ? (

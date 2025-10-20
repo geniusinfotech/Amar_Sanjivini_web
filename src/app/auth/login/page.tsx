@@ -74,7 +74,7 @@ const LoginPage: React.FC = () => {
 
       // Redirect based on role
       if (roles && Array.isArray(roles) && roles.includes("admin")) {
-        router.push("/admin");
+        router.push("/riken");
       } else {
         router.push("/");
       }

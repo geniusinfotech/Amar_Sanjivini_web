@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Noto_Serif_Gujarati } from "next/font/google";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 // import { WhatsAppButton } from "../components/WhatsAppButton";
@@ -8,13 +8,27 @@ import { AuthProvider } from "@/context/AuthContext";
 import { AnimationProvider } from "@/providers/animation-provider";
 import ScrollToTop from "@/components/ScrollToTop";
 
-const poppins = Poppins({
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin"],
+// const poppins = Poppins({
+//   weight: ["400", "500", "600", "700"],
+//   subsets: ["latin"],
+//   display: "swap",
+// });
+
+// Define the base URL for absolute paths
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL
+  ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
+  : "https://www.amarsanjeevani.com/";
+
+const notoSerifGujarati = Noto_Serif_Gujarati({
+  weight: ["400", "600", "700"], // Weights available for this font
+  subsets: ["gujarati", "latin"], // Ensure you load the Gujarati subset
   display: "swap",
+  // 3. Add the variable property for use in CSS/Tailwind
+  // variable: "--font-noto-gujarati",
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   // 1. PRIMARY SEO: TITLE (Max 60 characters for best display)
   title: "Amar Sanjeevani: Premium Fertilizers & Crop Care for High Yield",
 
@@ -83,8 +97,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={poppins.className}>
+    <html lang="gu" suppressHydrationWarning>
+      <body className={notoSerifGujarati.className}>
         <AuthProvider>
           <AnimationProvider>
             <Navbar />

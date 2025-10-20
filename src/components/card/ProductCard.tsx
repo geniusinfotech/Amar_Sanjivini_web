@@ -37,26 +37,29 @@ export default function ProductCard({
     : `${imageBaseUrl}/uploads/${product.image}`;
 
   return (
-    <div className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col h-full">
+    <div className="group bg-white border border-green-950 rounded-2xl shadow-green-800 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col h-full">
       {/* Image Container */}
-      <div className="relative h-64 w-full overflow-hidden bg-gray-50">
-        <Image
-          src={imageUrl}
-          alt={product.name}
-          fill
-          quality={100}
-          priority
-          unoptimized
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
+      <div className="relative h-full w-full overflow-hidden bg-gray-50">
+        <div className="w-1/2 mx-auto my-0 mt-10">
+          <Image
+            src={imageUrl}
+            alt={product.name}
+            width={500}
+            height={500}
+            quality={100}
+            priority
+            unoptimized
+            className="object-contain group-hover:scale-90 transition-transform duration-300"
+            // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        </div>
 
-        {/* New Product Badge */}
+        {/* New Product Badge
         {product.isNewProduct && (
           <div className="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
             NEW
           </div>
-        )}
+        )} */}
 
         {/* Category Badge */}
         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-gray-800 px-3 py-1 rounded-full text-xs font-medium shadow-md">
@@ -93,13 +96,17 @@ export default function ProductCard({
             <p className="text-xs text-gray-500">Inclusive of all taxes</p>
           </div>
 
-          <Link
-            href={`/products/${productId}`}
+          <div
+            onClick={(e) => {
+              e.preventDefault(); // Stop the card's link from triggering
+              // Add your actual Add to Cart logic here (e.g., using a handler function)
+              console.log("Adding to cart!");
+            }}
             className="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2 text-sm"
           >
             <ShoppingCart className="w-4 h-4" />
             View
-          </Link>
+          </div>
         </div>
       </div>
     </div>

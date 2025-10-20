@@ -14,22 +14,19 @@ export function Footer() {
           {/* Logo + About */}
           <div className="flex flex-col items-start">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="h-16 w-16 sm:h-20 sm:w-20 overflow-hidden flex-shrink-0">
+              <div className="h-16 w-16 sm:w-60 sm:h-auto overflow-hidden flex-shrink-0">
                 <Image
-                  src="/Logo/logo.png"
+                  src="/og-image-amarsanjeevani.png"
                   alt="logo"
-                  width={200}
+                  width={250}
                   height={200}
-                  className="object-contain"
+                  className="object-cover"
                 />
               </div>
-              <span className="text-lg sm:text-xl font-bold whitespace-nowrap">
-                Amar Sanjeevani
-              </span>
             </div>
             <p className="text-green-100 text-sm sm:text-base leading-relaxed">
-              Your trusted partner for premium fertilizers and pesticides.
-              Growing together for a healthier harvest.
+              ઉચ્ચ ગુણવત્તાવાળા ખાતરો અને જંતુનાશકો માટે તમારા વિશ્વસનીય
+              ભાગીદાર. સ્વસ્થ પાક માટે સાથે મળીને ઉગાડવું.
             </p>
           </div>
 
@@ -42,7 +39,7 @@ export function Footer() {
                   href="/"
                   className="text-green-100 hover:text-white transition-colors"
                 >
-                  Home
+                  હોમ
                 </Link>
               </li>
               <li>
@@ -50,7 +47,7 @@ export function Footer() {
                   href="/products"
                   className="text-green-100 hover:text-white transition-colors"
                 >
-                  Products
+                  પ્રોડક્ટ
                 </Link>
               </li>
               <li>
@@ -58,7 +55,7 @@ export function Footer() {
                   href="/about"
                   className="text-green-100 hover:text-white transition-colors"
                 >
-                  About Us
+                  અમારા વિશે
                 </Link>
               </li>
               <li>
@@ -66,7 +63,7 @@ export function Footer() {
                   href="/contact"
                   className="text-green-100 hover:text-white transition-colors"
                 >
-                  Contact
+                  સંપર્ક
                 </Link>
               </li>
             </ul>
@@ -89,7 +86,7 @@ export function Footer() {
             <ul className="space-y-3 text-sm sm:text-base text-green-100">
               <li className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
-                <span>+91 90139 14181</span>
+                <span>+91 93139 14181</span>
               </li>
               <li className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
