@@ -2,10 +2,8 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { ArrowRight, Star, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Star } from "lucide-react";
 import { useAnimation } from "@/providers/animation-provider";
-import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
@@ -162,7 +160,7 @@ export function NewArrivals() {
               {newArrivalsProducts.map((product) => (
                 <motion.div
                   key={product._id}
-                  className="group flex-shrink-0 w-64 sm:w-72 lg:w-80"
+                  className="group flex-shrink-0 w-64 sm:w-72 lg:w-80" // FIXED WIDTH
                   variants={{
                     hidden: enableAnimations ? { opacity: 0, y: 50 } : {},
                     visible: {
@@ -175,31 +173,41 @@ export function NewArrivals() {
                   animate={inView ? "visible" : "hidden"}
                 >
                   <div
-                    className="card group overflow-hidden bg-card rounded-2xl shadow-green-900 hover:shadow-lg transition-shadow duration-300 border border-green-950"
+                    className="card group overflow-hidden bg-card rounded-2xl shadow-green-900 hover:shadow-lg transition-shadow duration-300 border border-green-950 flex flex-col h-full" // Added flex-col h-full for better structure
                     onClick={() => handleClickProduct(product._id)}
                   >
-                    <div className="relative aspect-[4/6] overflow-hidden">
+                    {/* 👇 MODIFICATION HERE: Fixed height for image wrapper 👇 */}
+                    <div className="relative w-full py-2 overflow-hidden h-40 flex items-center justify-center bg-gray-50">
+                      {" "}
+                      {/* Added h-40 and centering classes */}
                       <Image
                         src={`${process.env.NEXT_PUBLIC_API_BASE}/uploads/${product.image}`}
                         alt={product.name}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        quality={100} // keep HD quality
-                        priority // preloads for visible images
-                        unoptimized // skip Next optimization delay
+                        width={500}
+                        height={500}
+                        className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105" // Increased hover scale for effect
+                        quality={100}
+                        priority
+                        unoptimized
                       />
                     </div>
+                    {/* 👆 END OF MODIFICATION 👆 */}
 
                     {/* Card Body */}
-                    <div className="p-4 bg-white">
+                    <div className="p-4 bg-white flex flex-col flex-grow">
+                      {" "}
+                      {/* Added flex-grow */}
                       <p className="text-xs text-green-900 uppercase tracking-wider mb-1">
                         {product.categoryName}
                       </p>
-                      <h4 className="font-heading font-semibold text-foreground mb-2 line-clamp-2 text-base">
+                      <h4 className="font-heading font-semibold text-foreground mb-2 line-clamp-2 text-base flex-grow">
+                        {" "}
+                        {/* Added flex-grow */}
                         {product.name}
                       </h4>
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between mt-auto">
+                        {" "}
+                        {/* Used mt-auto to push to bottom */}
                         <span className="text-xl font-bold text-primary">
                           ₹ {product.price}
                         </span>

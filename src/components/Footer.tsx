@@ -5,29 +5,28 @@ import Image from "next/image";
 export function Footer() {
   return (
     <footer
-      className="bg-green-900 text-white bg-no-repeat bg-right-bottom bg-contain rounded-t-4xl overflow-hidden"
-      style={{ backgroundImage: "url('/background/footer.png')" }}
+      className="bg-green-900 text-white bg-no-repeat bg-right-bottom bg-contain rounded-t-4xl overflow-hidden
+             bg-none md:bg-[url('/background/footer.png')]"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-8 sm:px-6 lg:px-8 py-12">
         {/* Top Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Logo + About */}
-          <div className="flex flex-col items-start">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="h-16 w-16 sm:w-60 sm:h-auto overflow-hidden flex-shrink-0">
+          <div className="flex flex-col items-start max-sm:mx-auto py-6 px-1 max-sm:bg-red-950 rounded-2xl">
+            <div className="flex-col items-center space-x-3 mb-4">
+              <div className="h-auto w-72 sm:w-60 sm:h-auto overflow-hidden flex-shrink-0">
                 <Image
                   src="/og-image-amarsanjeevani.png"
                   alt="logo"
-                  width={250}
-                  height={200}
+                  width={300}
+                  height={250}
                   className="object-cover"
                 />
               </div>
+              <p className="text-green-100 text-2xl sm:text-base leading-relaxed text-center">
+                દરેક પાકનો એક જ ઉપાય
+              </p>
             </div>
-            <p className="text-green-100 text-sm sm:text-base leading-relaxed">
-              ઉચ્ચ ગુણવત્તાવાળા ખાતરો અને જંતુનાશકો માટે તમારા વિશ્વસનીય
-              ભાગીદાર. સ્વસ્થ પાક માટે સાથે મળીને ઉગાડવું.
-            </p>
           </div>
 
           {/* Quick Links */}
@@ -96,7 +95,7 @@ export function Footer() {
               </li>
               <li className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 sm:h-6 sm:w-6 mt-1 flex-shrink-0" />
-                <span className="leading-relaxed">
+                <span className="leading-relaxed max-sm:w-72">
                   અમર ફાર્મ, નવાગામ ડાંભર પાટિયા, ઇટાળવાથી નવસારી–ગણદેવી રોડ,
                   સ્વામિનારાયણ ગૌશાળા પાસે, ડાંભર, નવસારી– 395472.
                 </span>

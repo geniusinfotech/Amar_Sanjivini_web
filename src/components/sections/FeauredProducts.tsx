@@ -124,10 +124,10 @@ export default function FeaturedProducts({
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="text-center">
               <Loader2 className="w-12 h-12 animate-spin text-green-700 mx-auto mb-4" />
-              <p className="text-gray-600">Loading featured products...</p> {" "}
+              <p className="text-gray-600">Loading featured products...</p> 
             </div>
           </div>
-        </div>{" "}
+        </div>
       </section>
     );
   } // Error state
@@ -142,7 +142,7 @@ export default function FeaturedProducts({
                 <p className="text-red-800 font-semibold mb-2">
                   Unable to load products
                 </p>
-                <p className="text-red-600 text-sm mb-4">{error}</p> {" "}
+                <p className="text-red-600 text-sm mb-4">{error}</p> 
                 <button
                   onClick={fetchProducts}
                   className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
@@ -152,7 +152,7 @@ export default function FeaturedProducts({
               </div>
             </div>
           </div>
-        </div>{" "}
+        </div>
       </section>
     );
   } // Empty state
@@ -175,7 +175,7 @@ export default function FeaturedProducts({
           <div className="flex justify-center items-center min-h-[300px]">
             <div className="text-center">
               <p className="text-gray-600 text-lg">
-                No products available at the moment{" "}
+                No products available at the moment
               </p>
 
               <p className="text-gray-500 text-sm mt-2">
@@ -183,14 +183,13 @@ export default function FeaturedProducts({
               </p>
             </div>
           </div>
-        </div>{" "}
+        </div>
       </section>
     );
   } // Success state with products
 
   return (
     <section className="py-16">
-      {" "}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-12"
@@ -237,8 +236,8 @@ export default function FeaturedProducts({
             બધા પ્રોડક્ટ્સ
             <ArrowRight className="ml-2 h-5 w-5" /> 
           </Link>
-        </motion.div>{" "}
-      </div>{" "}
+        </motion.div>
+      </div>
     </section>
   );
 }

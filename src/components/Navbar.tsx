@@ -32,21 +32,38 @@ export function Navbar() {
 
   return (
     <>
-      <div className="bg-green-800 text-green-50 text-center py-2">
+      {/* Top Banner (Always fixed to the top) */}
+      <div className="bg-green-800 text-green-50 text-center py-2 fixed top-0 left-0 right-0 z-[1000]">
         અમારું સ્પેશિયલ પ્રોડક્ટ : અમરસંજીવની
       </div>
-      <nav className="sticky top-0 z-50 bg-white shadow-md">
+
+      {/* NAVBAR: Changed from 'sticky top-0' to 'fixed top-[38px] left-0 right-0' 
+        The 'top-[38px]' ensures it sits right below the top banner (assuming the banner is ~38px high).
+        Use 'top-0' if you remove the banner.
+      */}
+      <nav
+        className="fixed top-[38px] left-0 right-0 z-[999] shadow-md"
+        style={{
+          background: "url('/background/farmer1.png')",
+          backgroundPosition: "bottom left",
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+          backgroundColor: "#fff",
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20 sm:h-24">
             {/* Logo Section */}
             <Link href="/" className="flex items-center space-x-2 sm:space-x-3">
               <div className="w-full h-full">
                 <Image
-                  src="/Logo/LOGONAME.png"
+                  src="/Logo/LOGONAME2.png"
                   alt="અમરસંજીવની"
                   width={400}
                   height={200}
-                  className="object-covers"
+                  className="object-cover"
+                  // Added max-h-16 or max-h-20 to ensure it fits well
+                  style={{ maxHeight: "5rem", width: "auto" }}
                 />
               </div>
             </Link>
@@ -66,7 +83,9 @@ export function Navbar() {
               {/* Google Translate - Desktop */}
               <div className="ml-4 flex items-center gap-2">
                 ભાષા પસંદ કરો :
-                <GoogleTranslate pageLanguage="gu" />
+                <div className="w-10 h-5 overflow-hidden ">
+                  <GoogleTranslate pageLanguage="gu" />
+                </div>
               </div>
             </div>
 
@@ -87,7 +106,7 @@ export function Navbar() {
 
         {/* Mobile Menu - Right Slide */}
         <div
-          className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out md:hidden z-50 ${
+          className={`fixed top-[38px] right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out md:hidden z-[1000] ${
             isOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
@@ -122,6 +141,12 @@ export function Navbar() {
           </div>
         </div>
       </nav>
+
+      {/* DUMMY PUSH DIV: Add a div with the total height of the fixed headers 
+          to prevent your page content from starting underneath the navbar.
+          Banner height (~38px) + Navbar height (~80-96px) = ~118px - 134px
+      */}
+      <div className="pt-[134px] sm:pt-[134px] md:pt-[134px]"></div>
     </>
   );
 }

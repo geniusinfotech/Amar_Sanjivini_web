@@ -24,7 +24,7 @@ interface Product {
 export default function ProductsPage() {
   // ---- States ----
   const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<string[]>(["All"]);
+  const [, setCategories] = useState<string[]>(["All"]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [minPrice, setMinPrice] = useState("");

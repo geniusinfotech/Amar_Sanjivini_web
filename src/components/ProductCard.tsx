@@ -15,27 +15,33 @@ export function ProductCard({ product }: ProductCardProps) {
     : `${process.env.NEXT_PUBLIC_IMAGE_URL}/${product.image}`;
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-shadow duration-300 border border-green-900">
-      <div className="relative h-96 bg-gray-100">
+    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-shadow duration-300 border border-green-900 flex flex-col h-full">
+      {/* Responsive Image Container: 
+        Added 'aspect-square' and 'relative' for proper image sizing.
+      */}
+      <div className="relative w-full aspect-square bg-gray-100 p-4">
         <Image
           src={imageUrl}
           alt={product.name}
+          // Changed to 'fill' to work with 'aspect-square' parent
           fill
+          sizes="(max-width: 768px) 100vw, 33vw"
           quality={100}
           priority
           unoptimized
-          className="object-contain"
+          className="object-contain hover:scale-105 transition-all duration-500 p-8"
         />
         {categoryLabel && (
-          <div className="absolute top-2 right-2">
-            <span className="bg-green-700 text-white text-xs px-2 py-1 rounded-full">
+          <div className="absolute top-2 right-2 z-10">
+            <span className="bg-green-700 text-white text-xs px-2 py-1 rounded-full shadow-md">
               {categoryLabel}
             </span>
           </div>
         )}
       </div>
 
-      <div className="p-4">
+      {/* Content Section */}
+      <div className="p-4 flex flex-col flex-grow">
         <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
           {product.name}
         </h3>
@@ -44,14 +50,14 @@ export function ProductCard({ product }: ProductCardProps) {
           ₹ {product.price?.toLocaleString()}
         </p>
 
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+        <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
           {product.description}
         </p>
 
         {productId && (
           <Link
             href={`/products/${productId}`}
-            className="inline-flex items-center text-green-700 hover:text-green-800 font-medium group"
+            className="inline-flex items-center text-green-700 hover:text-green-800 font-medium group mt-auto" // mt-auto pushes Link to the bottom
           >
             View Details
             <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
