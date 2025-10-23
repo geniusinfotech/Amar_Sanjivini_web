@@ -76,7 +76,7 @@ async function translateElements(selector: string, target: SupportedLang) {
   const texts: string[] = [];
   const mapping: { index: number; el: HTMLElement }[] = [];
 
-  nodes.forEach((el, i) => {
+  nodes.forEach((el) => {
     const original = el.getAttribute("data-original");
     const text = original ?? el.innerText.trim();
     // skip if empty

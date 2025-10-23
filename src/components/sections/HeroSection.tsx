@@ -86,7 +86,7 @@ export function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full overflow-hidden bg-green-50"
+      className="relative w-full overflow-hidden bg-green-50 "
     >
       {/* Background Images */}
       <div className="relative w-full h-full">
@@ -114,9 +114,10 @@ export function HeroSection() {
                 width={imageWidth}
                 height={imageHeight}
                 className="object-contain mx-auto block w-full"
-                unoptimized
-                quality={100}
+                // quality={100}
                 priority
+                placeholder="blur"
+                blurDataURL="/images/placeholder.jpg"
               />
             </div>
           </motion.div>

@@ -1,15 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react"; // 👈 Added useCallback
 import axios, { AxiosRequestConfig } from "axios";
 import { motion } from "framer-motion";
-import { Trash2, Edit, CheckCircle, XCircle } from "lucide-react"; // Added new icons
+import { Trash2, Edit, CheckCircle, XCircle } from "lucide-react";
 
 // 💡 IMPORTANT: Replace this placeholder import with the actual path to your useAuth hook.
-// Example: import { useAuth } from '@/context/auth-context';
 import { useAuth } from "@/context/AuthContext";
 
-// Define the interfaces
+// Define the interfaces (omitted for brevity, assume they are correct)
 interface TestimonialData {
   _id: string;
   text: string;
@@ -29,7 +28,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 const API_ENDPOINT = `${API_BASE}/testimonials`;
 
 // =========================================================================
-//                                  FORM COMPONENT
+//                             FORM COMPONENT (Unchanged)
 // =========================================================================
 
 interface TestimonialFormProps {
@@ -39,14 +38,14 @@ interface TestimonialFormProps {
   getTokenConfig: (config?: AxiosRequestConfig) => AxiosRequestConfig;
 }
 
-// 1. New function to handle the secure file upload
-
 const TestimonialAdminForm: React.FC<TestimonialFormProps> = ({
   initialData,
   onSuccess,
   isAdmin,
   getTokenConfig,
 }) => {
+  // ... (TestimonialAdminForm logic is unchanged, but included below for completeness)
+
   const initialFormState: TestimonialFormData = {
     text: "",
     image: "",
@@ -71,9 +70,8 @@ const TestimonialAdminForm: React.FC<TestimonialFormProps> = ({
     return initialFormState;
   });
 
-  // 2. New states for file upload management
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [_, setUseUrlInput] = useState(true); // Toggle between URL input and File input
+  const [, setUseUrlInput] = useState(true);
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{
@@ -82,12 +80,10 @@ const TestimonialAdminForm: React.FC<TestimonialFormProps> = ({
   } | null>(null);
   const isEditing = !!initialData?._id;
 
-  // Reset file/URL states when switching media type
   useEffect(() => {
-    // If we switch to video, ensure image states are clear
     if (formData.mediaType === "video") {
       setImageFile(null);
-      setUseUrlInput(true); // Default back to URL mode for image type next time
+      setUseUrlInput(true);
     }
   }, [formData.mediaType]);
 
@@ -108,11 +104,10 @@ const TestimonialAdminForm: React.FC<TestimonialFormProps> = ({
       image: e.target.value === "video" ? "" : prev.image,
       videoLink: e.target.value === "image" ? "" : prev.videoLink,
     }));
-    setImageFile(null); // Clear file when switching to video
+    setImageFile(null);
     setMessage(null);
   };
 
-  // 3. New handler for file input
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setImageFile(e.target.files[0]);
@@ -140,7 +135,7 @@ const TestimonialAdminForm: React.FC<TestimonialFormProps> = ({
     );
 
     if (formData.mediaType === "image" && imageFile) {
-      form.append("image", imageFile); // ✅ Match backend FileInterceptor('image')
+      form.append("image", imageFile);
     }
 
     const method = isEditing ? "patch" : "post";
@@ -173,7 +168,6 @@ const TestimonialAdminForm: React.FC<TestimonialFormProps> = ({
       setLoading(false);
     }
   };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -357,7 +351,7 @@ const TestimonialAdminForm: React.FC<TestimonialFormProps> = ({
 };
 
 // =========================================================================
-//                                DASHBOARD COMPONENT (Unchanged)
+//                             DASHBOARD COMPONENT (Updated with useCallback)
 // =========================================================================
 
 export default function TestimonialAdminDashboard() {
@@ -372,7 +366,8 @@ export default function TestimonialAdminDashboard() {
     useState<TestimonialData | null>(null);
   const [isLoadingList, setIsLoadingList] = useState(true);
 
-  const fetchAllTestimonials = async () => {
+  // 1. Stabilize fetchAllTestimonials with useCallback
+  const fetchAllTestimonials = useCallback(async () => {
     if (!isAdmin) {
       setIsLoadingList(false);
       return;
@@ -387,50 +382,60 @@ export default function TestimonialAdminDashboard() {
     } finally {
       setIsLoadingList(false);
     }
-  };
+  }, [isAdmin, getTokenConfig]); // Dependencies: isAdmin and getTokenConfig
+
+  // 2. Stabilize initial data fetch useEffect
   useEffect(() => {
     // Only fetch data if the user is confirmed to be an admin
     if (isAdmin) {
       fetchAllTestimonials();
     }
-  }, [isAdmin, getTokenConfig]); // Depend on isAdmin to trigger the fetch
+  }, [fetchAllTestimonials, isAdmin]); // 👈 Now depends on the stable function
 
   const handleEdit = (testimonial: TestimonialData) => {
     setSelectedTestimonial(testimonial);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleDelete = async (id: string) => {
-    if (
-      !isAdmin ||
-      !window.confirm("Are you sure you want to delete this testimonial?")
-    )
-      return;
-    try {
-      // 🔑 SECURE: Use getTokenConfig for delete
-      await axios.delete(`${API_ENDPOINT}/${id}`, getTokenConfig());
-      fetchAllTestimonials();
-    } catch (error) {
-      console.error("Failed to delete testimonial", error);
-      alert("Failed to delete testimonial.");
-    }
-  };
+  // 3. Stabilize handleDelete with useCallback
+  const handleDelete = useCallback(
+    async (id: string) => {
+      if (
+        !isAdmin ||
+        !window.confirm("Are you sure you want to delete this testimonial?")
+      )
+        return;
+      try {
+        // 🔑 SECURE: Use getTokenConfig for delete
+        await axios.delete(`${API_ENDPOINT}/${id}`, getTokenConfig());
+        fetchAllTestimonials();
+      } catch (error) {
+        console.error("Failed to delete testimonial", error);
+        alert("Failed to delete testimonial.");
+      }
+    },
+    [isAdmin, getTokenConfig, fetchAllTestimonials]
+  ); // Dependencies: isAdmin, getTokenConfig, and fetchAllTestimonials
 
-  const handleToggleActive = async (id: string) => {
-    if (!isAdmin) return;
-    try {
-      // 🔑 SECURE: Use getTokenConfig for toggle-active (Patch method with no data)
-      await axios.patch(
-        `${API_ENDPOINT}/${id}/toggle-active`,
-        {},
-        getTokenConfig()
-      );
-      fetchAllTestimonials();
-    } catch (error) {
-      console.error("Failed to toggle active status", error);
-      alert("Failed to change active status.");
-    }
-  };
+  // 4. Stabilize handleToggleActive with useCallback
+  const handleToggleActive = useCallback(
+    async (id: string) => {
+      if (!isAdmin) return;
+      try {
+        // 🔑 SECURE: Use getTokenConfig for toggle-active (Patch method with no data)
+        await axios.patch(
+          `${API_ENDPOINT}/${id}/toggle-active`,
+          {},
+          getTokenConfig()
+        );
+        fetchAllTestimonials();
+      } catch (error) {
+        console.error("Failed to toggle active status", error);
+        alert("Failed to change active status.");
+      }
+    },
+    [isAdmin, getTokenConfig, fetchAllTestimonials]
+  ); // Dependencies: isAdmin, getTokenConfig, and fetchAllTestimonials
 
   // --- Render Logic ---
 
@@ -466,7 +471,7 @@ export default function TestimonialAdminDashboard() {
         initialData={selectedTestimonial}
         onSuccess={() => {
           setSelectedTestimonial(null);
-          fetchAllTestimonials();
+          fetchAllTestimonials(); // Now calling the stable function
         }}
         isAdmin={isAdmin}
         getTokenConfig={getTokenConfig}

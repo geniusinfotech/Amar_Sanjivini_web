@@ -281,7 +281,10 @@ export default function AboutPage() {
                 src="/image/about-fect.jpg"
                 alt="ખેડૂત અમારા ઉત્પાદનોનો ઉપયોગ કરી રહ્યા છે"
                 fill
+                priority
                 className="object-cover"
+                placeholder="blur"
+                blurDataURL="/images/placeholder.jpg"
               />
             </motion.div>
           </div>
@@ -303,6 +306,9 @@ export default function AboutPage() {
               alt="અમારી પ્રતિબદ્ધતા"
               fill
               className="object-cover"
+              placeholder="blur"
+              blurDataURL="/images/placeholder.jpg"
+              priority
             />
           </motion.div>
 

@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react"; // 👈 Added useCallback
 import { motion } from "framer-motion";
 import { ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
-import ProductCard from "@/components/card/ProductCard"; // Adjust the import path as needed
+import ProductCard from "@/components/card/ProductCard";
 
 // Animation variants (Unchanged)
 const fadeInFromBottom = {
@@ -37,7 +37,7 @@ const itemVariants = {
   },
 };
 
-// --- Product Interface (Updated to include createdAt) ---
+// --- Product Interface ---
 interface Product {
   _id: string;
   id?: string;
@@ -65,8 +65,9 @@ export default function FeaturedProducts({
 }: FeaturedProductsProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null); // Helper function to correctly extract the date string for sorting
+  const [error, setError] = useState<string | null>(null);
 
+  // Helper function to correctly extract the date string for sorting
   const getDateValue = (product: Product): string => {
     if (typeof product.createdAt === "string") {
       return product.createdAt;
@@ -81,7 +82,8 @@ export default function FeaturedProducts({
     return "1970-01-01T00:00:00.000Z"; // Fallback to epoch
   };
 
-  const fetchProducts = async () => {
+  // 1. Wrap fetchProducts in useCallback
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -89,16 +91,20 @@ export default function FeaturedProducts({
       const response = await axios.get<Product[]>(
         `${apiBaseUrl}/products/simple`
       );
-      const rawProducts = response.data; // 1. Sort the products: Newest product first (Descending order)
+      const rawProducts = response.data;
 
+      // 1. Sort the products: Newest product first (Descending order)
       const sortedProducts = rawProducts.sort((a, b) => {
         const dateA = new Date(getDateValue(a)).getTime();
-        const dateB = new Date(getDateValue(b)).getTime(); // Descending sort (Newest first): b - a
-
+        const dateB = new Date(getDateValue(b)).getTime();
+        // Descending sort (Newest first): b - a
         return dateB - dateA;
-      }); // 2. Get the latest 6 products from the sorted list
-      const latestProducts = sortedProducts.slice(0, 6); // Normalize the data to ensure consistent id field
+      });
 
+      // 2. Get the latest 6 products from the sorted list
+      const latestProducts = sortedProducts.slice(0, 6);
+
+      // Normalize the data to ensure consistent id field
       const normalizedProducts = latestProducts.map((product) => ({
         ...product,
         id: product._id || product.id,
@@ -111,12 +117,14 @@ export default function FeaturedProducts({
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiBaseUrl]); // 👈 Dependency array for useCallback: only apiBaseUrl
 
+  // 2. Update useEffect dependency
   useEffect(() => {
     fetchProducts();
-  }, [apiBaseUrl]); // --- Component Render (Loading, Error, Empty, Success) --- // Loading state
+  }, [fetchProducts]); // 👈 Now depends on the stable fetchProducts function
 
+  // Error, Loading, and Empty States (Unchanged)
   if (loading) {
     return (
       <section className="py-14">
@@ -124,13 +132,13 @@ export default function FeaturedProducts({
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="text-center">
               <Loader2 className="w-12 h-12 animate-spin text-green-700 mx-auto mb-4" />
-              <p className="text-gray-600">Loading featured products...</p> 
+              <p className="text-gray-600">Loading featured products...</p>
             </div>
           </div>
         </div>
       </section>
     );
-  } // Error state
+  }
 
   if (error) {
     return (
@@ -142,9 +150,9 @@ export default function FeaturedProducts({
                 <p className="text-red-800 font-semibold mb-2">
                   Unable to load products
                 </p>
-                <p className="text-red-600 text-sm mb-4">{error}</p> 
+                <p className="text-red-600 text-sm mb-4">{error}</p>
                 <button
-                  onClick={fetchProducts}
+                  onClick={fetchProducts} // Calling the stable function
                   className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
                 >
                   Try Again
@@ -155,7 +163,7 @@ export default function FeaturedProducts({
         </div>
       </section>
     );
-  } // Empty state
+  }
 
   if (products.length === 0) {
     return (
@@ -186,8 +194,9 @@ export default function FeaturedProducts({
         </div>
       </section>
     );
-  } // Success state with products
+  }
 
+  // Success state with products
   return (
     <section className="py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -215,9 +224,9 @@ export default function FeaturedProducts({
           variants={containerVariants}
         >
           {products.map((product) => (
-            <motion.div key={product.id} variants={itemVariants}>
+            <motion.div key={product._id} variants={itemVariants}>
               <Link href={`/products/${product._id}`}>
-                <ProductCard product={product} /> 
+                <ProductCard product={product} />
               </Link>
             </motion.div>
           ))}
@@ -234,7 +243,7 @@ export default function FeaturedProducts({
             className="inline-flex items-center bg-green-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-800 transition-colors"
           >
             બધા પ્રોડક્ટ્સ
-            <ArrowRight className="ml-2 h-5 w-5" /> 
+            <ArrowRight className="ml-2 h-5 w-5" />
           </Link>
         </motion.div>
       </div>

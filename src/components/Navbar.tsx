@@ -64,6 +64,8 @@ export function Navbar() {
                   className="object-cover"
                   // Added max-h-16 or max-h-20 to ensure it fits well
                   style={{ maxHeight: "5rem", width: "auto" }}
+                  placeholder="blur"
+                  blurDataURL="/images/placeholder.jpg"
                 />
               </div>
             </Link>
@@ -146,7 +148,7 @@ export function Navbar() {
           to prevent your page content from starting underneath the navbar.
           Banner height (~38px) + Navbar height (~80-96px) = ~118px - 134px
       */}
-      <div className="pt-[134px] sm:pt-[134px] md:pt-[134px]"></div>
+      <div className="pt-[115px] sm:pt-[134px] md:pt-[134px]"></div>
     </>
   );
 }

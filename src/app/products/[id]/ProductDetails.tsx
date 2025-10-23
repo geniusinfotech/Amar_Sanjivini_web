@@ -66,7 +66,7 @@ export function ProductDetails({
   const [error, setError] = useState<string | null>(null);
 
   // Zoom State
-  const [_, setIsZoomed] = useState(false);
+  const [, setIsZoomed] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
 
   // Image Gallery State

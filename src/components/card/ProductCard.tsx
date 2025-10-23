@@ -2,8 +2,8 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { ShoppingCart, Package } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Product {
   _id: string;
@@ -35,6 +35,7 @@ export default function ProductCard({
   const imageUrl = product.image.startsWith("http")
     ? product.image
     : `${imageBaseUrl}/uploads/${product.image}`;
+  const router = useRouter();
 
   return (
     <div className="group bg-white border border-green-950 rounded-2xl shadow-green-800 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col h-full">
@@ -97,11 +98,7 @@ export default function ProductCard({
           </div>
 
           <div
-            onClick={(e) => {
-              e.preventDefault(); // Stop the card's link from triggering
-              // Add your actual Add to Cart logic here (e.g., using a handler function)
-              console.log("Adding to cart!");
-            }}
+            onClick={() => router.push(`/products/${productId}`)}
             className="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2 text-sm"
           >
             <ShoppingCart className="w-4 h-4" />

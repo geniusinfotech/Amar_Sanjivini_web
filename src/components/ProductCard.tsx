@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Product } from "@/lib/types";
 
 interface ProductCardProps {
@@ -13,9 +14,13 @@ export function ProductCard({ product }: ProductCardProps) {
   const imageUrl = product.image.startsWith("http")
     ? product.image
     : `${process.env.NEXT_PUBLIC_IMAGE_URL}/${product.image}`;
+  const router = useRouter();
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-shadow duration-300 border border-green-900 flex flex-col h-full">
+    <div
+      onClick={() => router.push(`/products/${productId}`)}
+      className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-shadow duration-300 border border-green-900 flex flex-col h-full"
+    >
       {/* Responsive Image Container: 
         Added 'aspect-square' and 'relative' for proper image sizing.
       */}

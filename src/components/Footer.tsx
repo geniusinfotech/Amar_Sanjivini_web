@@ -21,6 +21,8 @@ export function Footer() {
                   width={300}
                   height={250}
                   className="object-cover"
+                  placeholder="blur"
+                  blurDataURL="/images/placeholder.jpg"
                 />
               </div>
               <p className="text-green-100 text-2xl sm:text-base leading-relaxed text-center">

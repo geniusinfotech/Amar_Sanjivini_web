@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react"; // 👈 IMPORTED useCallback
 import axios from "axios";
 import ProductCard from "@/components/card/ProductCard";
-import { Filter, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 interface Product {
   _id: string;
@@ -25,18 +25,22 @@ export default function ProductsPage() {
   // ---- States ----
   const [products, setProducts] = useState<Product[]>([]);
   const [, setCategories] = useState<string[]>(["All"]);
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [search, setSearch] = useState("");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
+  const [selectedCategory] = useState("All");
+  const [search] = useState("");
+  const [minPrice] = useState("");
+  const [maxPrice] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  // const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE;
 
+  // ----------------------------------------------------
+  // ---- 1. Wrap functions in useCallback ----
+  // ----------------------------------------------------
+
   // ---- Fetch Categories ----
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await axios.get(`${apiBaseUrl}/products/simple`);
       const data = response.data;
@@ -49,10 +53,10 @@ export default function ProductsPage() {
     } catch (err) {
       console.error("Error fetching categories:", err);
     }
-  };
+  }, [apiBaseUrl]); // 👈 Dependency: apiBaseUrl (stable from env)
 
   // ---- Fetch Products ----
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -100,31 +104,25 @@ export default function ProductsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiBaseUrl, selectedCategory, search, minPrice, maxPrice]); // 👈 Dependencies for fetchProducts
+
+  // ----------------------------------------------------
+  // ---- 2. Effects now only depend on stable functions ----
+  // ----------------------------------------------------
 
   // ---- Effects ----
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [fetchCategories]); // 👈 Dependency is the stable callback
 
   useEffect(() => {
     fetchProducts();
-  }, [selectedCategory]);
+  }, [selectedCategory, fetchProducts]); // 👈 Dependencies: selectedCategory AND the stable callback
 
-  // ---- Handlers ----
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetchProducts();
-  };
-
-  const handlePriceFilter = () => {
-    fetchProducts();
-  };
-
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setIsFilterOpen(false);
-  };
+  // const handleCategoryChange = (category: string) => {
+  // 	setSelectedCategory(category);
+  // 	setIsFilterOpen(false);
+  // };
 
   // ---- Skeleton ----
   const SkeletonGrid = () => (
@@ -170,95 +168,10 @@ export default function ProductsPage() {
               {products.length === 1 ? "પ્રોડક્ટ" : "પ્રોડક્ટસ્"})
             </span>
           </h2>
-
-          <button
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className="md:hidden flex items-center space-x-2 bg-green-700 text-white px-4 py-2 rounded-lg"
-          >
-            <Filter className="h-4 w-4" />
-            <span>Filter</span>
-          </button>
         </div>
 
-        {/* Filters */}
-        {/* <div
-          className={`${
-            isFilterOpen ? "block" : "hidden"
-          } md:block mb-6 space-y-4`}
-        > */}
-        {/* Search Bar */}
-        {/* <form onSubmit={handleSearch} className="flex gap-3">
-            <div className="relative flex-1">
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search products... "
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 outline-none"
-              />
-              <button
-                type="submit"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-green-700"
-              >
-                <Search className="h-5 w-5" />
-              </button>
-            </div>
-          </form> */}
-
-        {/* Category Filter */}
-        {/* <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => handleCategoryChange(category)}
-                className={`px-6 py-2 rounded-full font-medium transition-all ${
-                  selectedCategory === category
-                    ? "bg-green-700 text-white shadow-md"
-                    : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-300"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div> */}
-
-        {/* Price Range Filter */}
-        {/* <div className="flex flex-wrap gap-3 items-center">
-            <input
-              type="number"
-              placeholder="Min Price"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-              className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 outline-none"
-            />
-            <span className="text-gray-500">to</span>
-            <input
-              type="number"
-              placeholder="Max Price"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 outline-none"
-            />
-            <button
-              onClick={handlePriceFilter}
-              className="px-6 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors"
-            >
-              Apply
-            </button>
-            {(minPrice || maxPrice) && (
-              <button
-                onClick={() => {
-                  setMinPrice("");
-                  setMaxPrice("");
-                  fetchProducts();
-                }}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800 underline"
-              >
-                Clear
-              </button>
-            )}
-          </div> */}
-        {/* </div> */}
+        {/* Filters (commented out) */}
+        {/* ... */}
 
         {/* Product Grid */}
         {loading ? (
@@ -271,7 +184,7 @@ export default function ProductsPage() {
               </p>
               <p className="text-red-600 text-sm mb-4">{error}</p>
               <button
-                onClick={fetchProducts}
+                onClick={fetchProducts} // Now calling the stable function
                 className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
               >
                 Try Again

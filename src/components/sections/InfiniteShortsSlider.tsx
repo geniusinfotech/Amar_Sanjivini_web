@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState, useCallback, memo } from "react";
 import { motion, PanInfo } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 // --- Data ---
 const testimonials = [
@@ -30,6 +31,8 @@ interface TestimonialCardProps {
   index: number;
   onVideoStateChange: (index: number, isPlaying: boolean) => void;
   isActive: boolean;
+  // Determines if the video player should be initialized (lazy loading)
+  shouldLoad: boolean;
 }
 
 const TestimonialCard = memo(
@@ -38,6 +41,7 @@ const TestimonialCard = memo(
     index,
     onVideoStateChange,
     isActive,
+    shouldLoad, // 👈 New prop for lazy loading
   }: TestimonialCardProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -46,9 +50,19 @@ const TestimonialCard = memo(
 
     const videoId = testimonial.videoUrl;
 
-    // Initialize YouTube Player
+    // Initialize/Destroy YouTube Player based on shouldLoad
     useEffect(() => {
-      // Load YouTube IFrame API
+      // Cleanup: If shouldLoad becomes false, destroy the existing player
+      if (!shouldLoad) {
+        if (playerRef.current && playerRef.current.destroy) {
+          playerRef.current.destroy();
+          playerRef.current = null;
+        }
+        setPlayerReady(false);
+        return;
+      }
+
+      // Load YouTube IFrame API script globally
       if (!(window as any).YT) {
         const tag = document.createElement("script");
         tag.src = "https://www.youtube.com/iframe_api";
@@ -56,8 +70,9 @@ const TestimonialCard = memo(
         firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
       }
 
+      // Function to initialize the player
       const initPlayer = () => {
-        if (!containerRef.current || playerRef.current) return;
+        if (!shouldLoad || !containerRef.current || playerRef.current) return;
 
         const YT = (window as any).YT;
         if (!YT || !YT.Player) {
@@ -66,9 +81,16 @@ const TestimonialCard = memo(
         }
 
         const playerId = `player-${index}-${videoId}`;
-        const playerDiv = containerRef.current.querySelector(`#${playerId}`);
 
-        if (!playerDiv) return;
+        // Ensure the placeholder div exists and create a player in it
+        let playerDiv = containerRef.current.querySelector(`#${playerId}`);
+        if (!playerDiv) {
+          playerDiv = document.createElement("div");
+          playerDiv.id = playerId;
+          containerRef.current
+            .querySelector(".video-placeholder")
+            ?.appendChild(playerDiv);
+        }
 
         playerRef.current = new YT.Player(playerId, {
           videoId: videoId,
@@ -81,13 +103,11 @@ const TestimonialCard = memo(
           events: {
             onReady: () => setPlayerReady(true),
             onStateChange: (event: any) => {
-              if (event.data === YT.PlayerState.PLAYING) {
+              const { PLAYING, PAUSED, ENDED } = YT.PlayerState;
+              if (event.data === PLAYING) {
                 setIsPlaying(true);
                 onVideoStateChange(index, true);
-              } else if (
-                event.data === YT.PlayerState.PAUSED ||
-                event.data === YT.PlayerState.ENDED
-              ) {
+              } else if (event.data === PAUSED || event.data === ENDED) {
                 setIsPlaying(false);
                 onVideoStateChange(index, false);
               }
@@ -96,15 +116,13 @@ const TestimonialCard = memo(
         });
       };
 
+      // Delay initialization slightly to prevent blocking
       const timer = setTimeout(initPlayer, 500);
       return () => {
         clearTimeout(timer);
-        if (playerRef.current && playerRef.current.destroy) {
-          playerRef.current.destroy();
-          playerRef.current = null;
-        }
+        // The main cleanup (destruction) is handled when shouldLoad changes
       };
-    }, [videoId, index, onVideoStateChange]);
+    }, [videoId, index, onVideoStateChange, shouldLoad]); // 👈 shouldLoad is the key dependency
 
     // Pause video when carousel moves (card becomes inactive)
     useEffect(() => {
@@ -112,10 +130,30 @@ const TestimonialCard = memo(
         try {
           playerRef.current.pauseVideo();
         } catch (e) {
-          console.error("Error pausing video:", e);
+          // console.error("Error pausing video:", e);
         }
       }
-    }, [isActive, playerReady]);
+    }, [isActive, playerReady, isPlaying]);
+
+    // Render logic: either IFrame or a static thumbnail
+    const videoElement = shouldLoad ? (
+      <div
+        id={`player-${index}-${videoId}`}
+        className="absolute inset-0 w-full h-full"
+      ></div>
+    ) : (
+      // Static thumbnail placeholder for non-loaded cards
+      <div className="absolute inset-0 w-full h-full bg-black flex items-center justify-center">
+        <Image
+          // Standard YouTube thumbnail URL pattern
+          src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+          alt="Video Thumbnail"
+          className="w-full h-full object-cover opacity-70"
+          loading="lazy" // Native browser lazy loading
+          fill
+        />
+      </div>
+    );
 
     return (
       <div className="flex-shrink-0 w-72 sm:w-80 md:w-72 lg:w-80 px-3 pb-5">
@@ -126,10 +164,9 @@ const TestimonialCard = memo(
           <div className="relative w-full">
             {/* 9:16 aspect ratio for vertical shorts */}
             <div className="pt-[177.77%]"></div>
-            <div
-              id={`player-${index}-${videoId}`}
-              className="absolute inset-0 w-full h-full"
-            ></div>
+            <div className="video-placeholder absolute inset-0 w-full h-full">
+              {videoElement}
+            </div>
           </div>
         </div>
       </div>
@@ -167,7 +204,7 @@ export const InfiniteShortsSlider = () => {
     return () => window.removeEventListener("resize", calculateWidth);
   }, []);
 
-  // Handle video state changes
+  // Handle video state changes (stable function)
   const handleVideoStateChange = useCallback(
     (index: number, isPlaying: boolean) => {
       setIsVideoPlaying(isPlaying);
@@ -176,7 +213,7 @@ export const InfiniteShortsSlider = () => {
     []
   );
 
-  // Slide to specific index
+  // Slide to specific index (stable function)
   const slideTo = useCallback(
     (index: number, immediate = false) => {
       if (cardWidth === 0) return;
@@ -192,12 +229,24 @@ export const InfiniteShortsSlider = () => {
     [cardWidth]
   );
 
+  // Handle button clicks (stable functions)
+  const handleNext = useCallback(
+    () => slideTo(currentIndex + 1),
+    [currentIndex, slideTo]
+  );
+  const handlePrev = useCallback(
+    () => slideTo(currentIndex - 1),
+    [currentIndex, slideTo]
+  );
+
   // Handle infinite loop reset
   useEffect(() => {
     if (cardWidth === 0) return;
     const handleTransitionEnd = () => {
+      // If we move to the third set, jump back to the middle set (index 9)
       if (currentIndex >= testimonials.length * 2)
         slideTo(testimonials.length, true);
+      // If we move to the first set, jump back to the middle set (index 9)
       else if (currentIndex <= 0) slideTo(testimonials.length, true);
     };
     const slider = sliderRef.current;
@@ -208,21 +257,13 @@ export const InfiniteShortsSlider = () => {
     }
   }, [currentIndex, slideTo, cardWidth]);
 
-  const handleNext = useCallback(
-    () => slideTo(currentIndex + 1),
-    [currentIndex, slideTo]
-  );
-  const handlePrev = useCallback(
-    () => slideTo(currentIndex - 1),
-    [currentIndex, slideTo]
-  );
-
   // Auto-play functionality
   useEffect(() => {
     if (isHovered || isDragging || isVideoPlaying) {
       if (autoPlayRef.current) clearInterval(autoPlayRef.current);
       return;
     }
+    // Use handleNext (stable) in the interval
     autoPlayRef.current = setInterval(() => handleNext(), 4000);
     return () => {
       if (autoPlayRef.current) clearInterval(autoPlayRef.current);
@@ -238,7 +279,7 @@ export const InfiniteShortsSlider = () => {
     const threshold = 50;
     if (info.offset.x > threshold) handlePrev();
     else if (info.offset.x < -threshold) handleNext();
-    else slideTo(currentIndex);
+    else slideTo(currentIndex); // Snap back
   };
 
   // Initialize position
@@ -284,17 +325,26 @@ export const InfiniteShortsSlider = () => {
             onDragStart={() => setIsDragging(true)}
             onDragEnd={handleDragEnd}
           >
-            {extendedTestimonials.map((testimonial, index) => (
-              <TestimonialCard
-                key={`${testimonial.id}-${index}`}
-                testimonial={testimonial}
-                index={index}
-                onVideoStateChange={handleVideoStateChange}
-                isActive={
-                  playingVideoIndex === null || playingVideoIndex === index
-                }
-              />
-            ))}
+            {extendedTestimonials.map((testimonial, index) => {
+              // LAZY LOADING LOGIC: Only load the current card and its direct neighbors
+              const shouldLoad =
+                index === currentIndex ||
+                index === currentIndex - 1 ||
+                index === currentIndex + 1;
+
+              return (
+                <TestimonialCard
+                  key={`${testimonial.id}-${index}`}
+                  testimonial={testimonial}
+                  index={index}
+                  onVideoStateChange={handleVideoStateChange}
+                  isActive={
+                    playingVideoIndex === null || playingVideoIndex === index
+                  }
+                  shouldLoad={shouldLoad} // 👈 Lazy loading enabled here
+                />
+              );
+            })}
           </motion.div>
         </div>
 

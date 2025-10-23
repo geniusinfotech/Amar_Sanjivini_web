@@ -57,7 +57,7 @@ export default function ProductManagement(): React.JSX.Element {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
-  const [sortBy, _] = useState<string>("");
+  const [sortBy, ] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
 
   /** Fetch Products */
