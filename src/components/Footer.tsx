@@ -12,7 +12,7 @@ export function Footer() {
         {/* Top Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Logo + About */}
-          <div className="flex flex-col items-start max-sm:mx-auto py-6 px-1 max-sm:bg-red-950 rounded-2xl">
+          <div className="flex flex-col items-start max-sm:mx-auto py-6 px-1">
             <div className="flex-col items-center space-x-3 mb-4">
               <div className="h-auto w-72 sm:w-60 sm:h-auto overflow-hidden flex-shrink-0">
                 <Image

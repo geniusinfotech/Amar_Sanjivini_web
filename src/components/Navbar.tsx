@@ -34,7 +34,15 @@ export function Navbar() {
     <>
       {/* Top Banner (Always fixed to the top) */}
       <div className="bg-green-800 text-green-50 text-center py-2 fixed top-0 left-0 right-0 z-[1000]">
-        અમારું સ્પેશિયલ પ્રોડક્ટ : અમરસંજીવની
+        <span className="hidden md:inline-block">
+          ઘરે બેઠા અમર સંજીવની મેળવવા માટે વોટ્સ એપ કરો&nbsp;: &nbsp;
+        </span>
+        <span className="inline-block md:hidden">
+          ઘરેબેઠા અમરસંજીવની મેળવવા વોટ્સ એપ&nbsp;:&nbsp;
+        </span>
+        <a href="https://wa.me/+919313914181" className="text-orange-200">
+          +91 93139 14181
+        </a>
       </div>
 
       {/* NAVBAR: Changed from 'sticky top-0' to 'fixed top-[38px] left-0 right-0' 

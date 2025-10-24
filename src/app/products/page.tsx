@@ -162,10 +162,10 @@ export default function ProductsPage() {
         {/* Header Row */}
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold text-gray-900">
-            {selectedCategory === "All" ? "બધા પ્રોડક્ટસ્" : selectedCategory}
+            {selectedCategory === "All" ? "બધા પ્રોડક્ટ્સ" : selectedCategory}
             <span className="ml-2 text-gray-500 text-lg font-normal">
               ({products.length}{" "}
-              {products.length === 1 ? "પ્રોડક્ટ" : "પ્રોડક્ટસ્"})
+              {products.length === 1 ? "પ્રોડક્ટ" : "પ્રોડક્ટ્સ"})
             </span>
           </h2>
         </div>

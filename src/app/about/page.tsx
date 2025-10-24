@@ -56,17 +56,17 @@ export default function AboutPage() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-2">
-            અમર સંજીવની વિશે
+            અમરસંજીવની એગ્રો પ્રોડક્ટસ
           </h1>
 
           <p className="text-lg text-green-100 max-w-2xl">
-            ટકાઉ ખેતી અને પાકની શ્રેષ્ઠતામાં તમારા વિશ્વસનીય ભાગીદાર
+            જમીનની ફળદ્રુપતા વધારવા અને પાકનું ઉત્પાદન વધારવા માટેનું વિજ્ઞાન
           </p>
         </div>
       </motion.div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Who We Are Section - Scroll-In Animation */}
+        {/* Who We Are Section - Scroll-In Animation (Updated Content) */}
         <motion.div
           className="grid md:grid-cols-2 gap-12 items-center mb-20"
           initial="hidden"
@@ -78,6 +78,7 @@ export default function AboutPage() {
             className="relative h-96 rounded-lg overflow-hidden shadow-xl"
             variants={imageVariants}
           >
+            {/* Keeping the existing Youtube embed */}
             <iframe
               src="https://www.youtube.com/embed/wkQ5QYJU0Lc?controls=1&modestbranding=1&rel=0&autoplay=0"
               title="અમર સંજીવની કંપની પરિચય"
@@ -90,32 +91,33 @@ export default function AboutPage() {
 
           <motion.div variants={slideUpVariants}>
             <h2 className="text-3xl font-bold text-green-950 mb-3">
-              અમે કોણ છીએ
+              ફળદ્રુપ ખેતી તરફ એક ડગલું
             </h2>
 
             <p className="text-gray-700 text-xl mb-2 leading-relaxed">
-              અમર સંજીવની પ્રીમિયમ કૃષિ ઇનપુટ્સનું અગ્રણી સપ્લાયર છે, જે
-              ઉચ્ચ-ગુણવત્તાવાળા ખાતરો, જંતુનાશકો, નીંદણનાશકો અને ફૂગનાશકોમાં
-              વિશેષતા ધરાવે છે. કૃષિ ક્ષેત્રે એક દાયકાથી વધુના અનુભવ સાથે, અમે
-              ખેડૂતો અને કૃષિ વ્યવસાયિકોમાં એક વિશ્વસનીય નામ તરીકે સ્થાપિત થયા
-              છીએ.
+              અમરસંજીવની (Amarsanjivani) એગ્રો પ્રોડક્ટસ જમીનને સંપૂર્ણ પોષણ
+              પૂરું પાડવા માટે તૈયાર કરવામાં આવી છે. અમારી
+              માઇક્રો-ન્યુટ્રિઅન્ટ્સનો ઉપયોગ કરવાથી જમીનમાં રહેલા તમામ ફૂગ દૂર
+              થાય છે, જેથી પાક તંદુરસ્ત રહે છે અને રોગ આવતો નથી.
             </p>
 
             <p className="text-gray-700 text-xl mb-2 leading-relaxed">
-              ગુણવત્તા અને ગ્રાહક સંતોષ પ્રત્યેની અમારી પ્રતિબદ્ધતાએ હજારો
-              ખેડૂતોને બહેતર ઉપજ અને તંદુરસ્ત પાક મેળવવામાં મદદ કરી છે. અમે
-              સમજીએ છીએ કે ખેતી માત્ર એક વ્યવસાય નથી પણ જીવનની એક રીત છે, અને
-              અમે તેમની મુસાફરીના દરેક પગલે ખેડૂતોને ટેકો આપવા માટે સમર્પિત છીએ.
+              અમે ફક્ત પરંપરાગત ખાતર નથી વેચતા, પરંતુ પાક સંરક્ષણ અને ઉત્પાદન
+              વધારવા માટે વૈજ્ઞાનિક ઉપાયો પ્રદાન કરીએ છીએ. અમારા ઉત્પાદનોથી
+              ખેડૂતોને કપાસના જીવાત (ગુલાબી ઇયળ) માં રાહત મળે છે અને શેરડી,
+              તેલીબિયાં, અનાજ જેવા પાકોમાં વજન, જાડાઈ, મીઠાશ અને ઉત્પાદનમાં
+              નોંધપાત્ર વધારો જોવા મળે છે.
             </p>
 
             <p className="text-gray-700 text-xl leading-relaxed">
-              અમે સીધા પ્રમાણિત ઉત્પાદકો સાથે કામ કરીએ છીએ અને અમે સપ્લાય કરીએ
-              છીએ તે દરેક ઉત્પાદન અસરકારકતા અને સલામતીના ઉચ્ચતમ ધોરણોને પૂર્ણ
-              કરે છે તેની ખાતરી કરવા માટે કડક ગુણવત્તા તપાસણી કરીએ છીએ.
+              અમારી શ્રેણીમાં N.P.K. ગ્રેડ, પોટેશિયમ હ્યુમેટ, બોરોન, સલ્ફર,
+              ઝીંક, કેલ્શિયમ નાઈટ્રેટ, ફુલવિક એસિડ, હ્યુમિક એસિડ અને પાકની
+              જરૂરિયાત મુજબના ચીલેટેડ મિક્સ માઈક્રોન્યુટ્રિઅન્ટ્સનો સમાવેશ થાય
+              છે.
             </p>
           </motion.div>
         </motion.div>
-        {/* Mission, Vision, Values Section - Staggered Scroll-In */}
+        {/* Mission, Vision, Values Section - Staggered Scroll-In (Unchanged) */}
         <motion.div
           className="grid md:grid-cols-3 gap-8 mb-20"
           initial="hidden"
@@ -180,7 +182,7 @@ export default function AboutPage() {
             </p>
           </motion.div>
         </motion.div>
-        {/* Why Choose Us Section - Special Fade/Scale Entrance */}{" "}
+        {/* Why Choose Us Section - Special Fade/Scale Entrance (Updated Content)*/}{" "}
         <motion.div
           className="bg-gradient-to-br from-green-700 to-green-900 rounded-lg shadow-xl p-12 text-white mb-20"
           initial={{ opacity: 0, scale: 0.98 }}
@@ -197,11 +199,11 @@ export default function AboutPage() {
               variants={containerVariants}
             >
               <h2 className="text-3xl font-bold mb-6">
-                અમર સંજીવની કેમ પસંદ કરવું?
+                અમરસંજીવની કેમ પસંદ કરવું?
               </h2>
 
               <ul className="space-y-4">
-                {/* Apply slideUpVariants to each list item for a nice staggered effect */}
+                {/* Benefits based on the brochure */}
 
                 <motion.li
                   className="flex items-start"
@@ -210,11 +212,29 @@ export default function AboutPage() {
                   <Award className="h-6 w-6 mr-3 mt-1 flex-shrink-0" />
 
                   <div>
-                    <h4 className="font-semibold mb-1">૧૦૦% અસલી ઉત્પાદનો </h4>
+                    <h4 className="font-semibold mb-1">
+                      ઉત્પાદન અને ગુણવત્તામાં વધારો
+                    </h4>
 
                     <p className="text-green-100">
-                      તમામ ઉત્પાદનો યોગ્ય દસ્તાવેજો સાથે પ્રમાણિત ઉત્પાદકો
-                      પાસેથી સીધા મેળવવામાં આવે છે
+                      કોઈપણ પાકમાં ૮ થી ૧૦ મહિનામાં નવો કલ્લો આવે અને અંતે
+                      ઉત્પાદન અને ગુણવત્તામાં વધારો થાય.
+                    </p>
+                  </div>
+                </motion.li>
+
+                <motion.li
+                  className="flex items-start"
+                  variants={slideUpVariants}
+                >
+                  <Award className="h-6 w-6 mr-3 mt-1 flex-shrink-0" />
+
+                  <div>
+                    <h4 className="font-semibold mb-1">પાકને રોગમુક્ત રાખો</h4>
+
+                    <p className="text-green-100">
+                      પાકમાં ફૂગ અને રોગ આવતા નથી. હવામાનના કારણે જો કોઈ રોગ આવે
+                      તો તેનું નિવારણ જલ્દી થઈ શકે છે.
                     </p>
                   </div>
                 </motion.li>
@@ -227,28 +247,12 @@ export default function AboutPage() {
 
                   <div>
                     <h4 className="font-semibold mb-1">
-                      નિષ્ણાત કૃષિ માર્ગદર્શન
+                      ખારાશવાળી જમીન માટે રામબાણ
                     </h4>
 
                     <p className="text-green-100">
-                      કૃષિ નિષ્ણાતોની અમારી ટીમ તમારી ચોક્કસ જરૂરિયાતો માટે
-                      વ્યક્તિગત સલાહ આપે છે
-                    </p>
-                  </div>
-                </motion.li>
-
-                <motion.li
-                  className="flex items-start"
-                  variants={slideUpVariants}
-                >
-                  <Award className="h-6 w-6 mr-3 mt-1 flex-shrink-0" />
-
-                  <div>
-                    <h4 className="font-semibold mb-1">સ્પર્ધાત્મક ભાવો</h4>
-
-                    <p className="text-green-100">
-                      ગુણવત્તા સાથે સમાધાન કર્યા વિના વાજબી ભાવો, નિયમિત ઑફર્સ
-                      અને જથ્થાબંધ ડિસ્કાઉન્ટ સાથે
+                      અમારું <q>સોઈલ કન્ડીશનર</q> ખારાશવાળી જમીન કે કડક જમીન માં
+                      અનુકૂળ બનાવે છે અને મૂળ તત્વોને સક્રિય કરે છે.
                     </p>
                   </div>
                 </motion.li>
@@ -261,12 +265,12 @@ export default function AboutPage() {
 
                   <div>
                     <h4 className="font-semibold mb-1">
-                      ઝડપી અને વિશ્વસનીય ડિલિવરી
+                      જમીનનું પાણી શોષણ વધારવું
                     </h4>
 
                     <p className="text-green-100">
-                      યોગ્ય હેન્ડલિંગ અને સ્ટોરેજ સાથે તમારા સ્થાન પર સમયસર
-                      ડિલિવરી
+                      સૂકા ખેતરોમાં પણ પાકને પાણીની અછત વર્તાતી નથી. એક જ
+                      વરસાદમાં પણ જમીનમાં ભેજ જળવાઈ રહે છે.
                     </p>
                   </div>
                 </motion.li>
@@ -289,7 +293,7 @@ export default function AboutPage() {
             </motion.div>
           </div>
         </motion.div>
-        {/* Our Commitment Section - Scroll-In Animation */}
+        {/* Our Commitment Section - Scroll-In Animation (Updated Content) */}
         <motion.div
           className="grid md:grid-cols-2 gap-12 items-center"
           initial="hidden"
@@ -314,21 +318,22 @@ export default function AboutPage() {
 
           <motion.div variants={slideUpVariants}>
             <h2 className="text-3xl font-bold text-green-950 mb-6">
-              અમારી પ્રતિબદ્ધતા
+              જમીન અને ખેડૂત પ્રત્યે અમારી પ્રતિબદ્ધતા
             </h2>
 
             <p className="text-gray-700 text-xl mb-2 leading-relaxed">
-              અમે <b>ટકાઉ કૃષિ પદ્ધતિઓ</b> ને ટેકો આપવા માટે પ્રતિબદ્ધ છીએ જે
-              પાકની ઉપજને મહત્તમ કરતી વખતે પર્યાવરણનું રક્ષણ કરે છે. અમારી
-              ઉત્પાદન પસંદગી અસરકારકતા, સલામતી અને પર્યાવરણીય જવાબદારી પર ભાર
-              મૂકે છે.
+              અમે <b>ટકાઉ કૃષિ પદ્ધતિઓ</b> ને ટેકો આપવા માટે પ્રતિબદ્ધ છીએ.
+              અમારી વિશેષતા માઇક્રો-ન્યુટ્રિઅન્ટ્સ અને સોઈલ કન્ડીશનર દ્વારા
+              જમીનની મૂળ ફળદ્રુપતા (organic carbon) ને પુનર્જીવિત કરવાની છે, જે
+              પાકની ઉપજને મહત્તમ કરતી વખતે જમીન અને પર્યાવરણનું રક્ષણ કરે છે.
             </p>
 
             <p className="text-gray-700 text-xl mb-6 leading-relaxed">
-              ઉત્પાદનો પૂરા પાડવા ઉપરાંત, અમે ખેડૂતો માટે <b>જ્ઞાન ભાગીદાર </b>
-              બનવાનો પ્રયત્ન કરીએ છીએ, યોગ્ય ઉપયોગ, પાક વ્યવસ્થાપન અને જંતુ
-              નિયંત્રણ વ્યૂહરચનાઓ પર માર્ગદર્શન આપીએ છીએ. અમારી ગ્રાહક સપોર્ટ
-              ટીમ કોઈપણ પ્રશ્નો અથવા ચિંતાઓ સાથે મદદ કરવા માટે હંમેશા તૈયાર છે.
+              ઉત્પાદનો પૂરા પાડવા ઉપરાંત, અમે ખેડૂતો માટે{" "}
+              <b>સલાહકાર અને જ્ઞાન ભાગીદાર</b> બનવાનો પ્રયત્ન કરીએ છીએ. અમે
+              યોગ્ય માત્રા, પાક વ્યવસ્થાપન અને જંતુ નિયંત્રણ વ્યૂહરચનાઓ પર સતત
+              માર્ગદર્શન આપીએ છીએ. અમારી ગ્રાહક સપોર્ટ ટીમ કોઈપણ પ્રશ્નો અથવા
+              ચિંતાઓ સાથે મદદ કરવા માટે હંમેશા તૈયાર છે.
             </p>
 
             <Link
